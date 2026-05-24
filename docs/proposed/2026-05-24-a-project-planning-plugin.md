@@ -132,7 +132,10 @@ The simplest skill. No `AGENTS.md` configuration. Triggers on the user dumping a
 
 Outcome: a working transcript-capture entry point. Paste a transcript and get a dated file written. This is the foundation everything else extracts from.
 
-## - [ ] Phase 3: `plan` skill + reference documents
+## - [x] Phase 3: `plan` skill + reference documents
+
+**Skills used**: `skill-creator` (read for frontmatter conventions, "pushy" description tuning, and the domain-organization pattern that maps a top-level SKILL.md to per-source reference files). Reviewed the reference skills named in `private-context.md` (`documentation` for Confluence read-before-write discipline, `vector-slack` for Slack read patterns) but only lifted the *patterns* — no project-specific IDs, cloudIds, or channel IDs were carried over, per `private-context.md`'s explicit list of things to keep out of the public repo.
+**Principles applied**: Kept `SKILL.md` as the trigger surface and a router — it does *not* re-derive the read/write mechanics, just points at the matching reference doc. Used the skill-creator domain-organization pattern (one SKILL.md + per-variant reference docs in the same directory) so only relevant references load. Wrote the trigger description "pushy" with concrete user phrases. Made every reference doc project-agnostic — cloudId, space key, page IDs, project key, board ID, channel ID, and workspace URL all sourced from the project's `AGENTS.md`, with explicit "don't hardcode them here" reminders. Scoped `slack.md` to read-only per the phase spec; deferred posting to other skills. `local.md` describes the `plans/plan.md` manifest convention without prescribing internal structure beyond "the manifest exists and points at the rest." All four reference docs carry source-appropriate write discipline (Confluence read-before-write with version concurrency; Jira show-then-confirm; Slack: skill doesn't post; local: show-then-confirm). Kept all docs short and loose per the plan's simplicity bar.
 
 **Skills to read**: `skill-creator`
 
