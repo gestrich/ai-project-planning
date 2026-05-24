@@ -295,7 +295,32 @@ A public-facing HTML site hosted on GitHub Pages from this repo, walking visitor
 
 Outcome: a working GitHub Pages site that lets a visitor understand the plugin without reading the repo.
 
-## - [ ] Phase 11: Validation
+## - [x] Phase 11: Validation
+
+**Skills used**: `skill-creator` (re-read for the description-tuning step in case any skill needed its frontmatter sharpened — none did during this pass). No SKILL.md frontmatter changes were required.
+**Principles applied**: Treated this phase as a *mechanical validation pass plus a documented hand-off list* — the parts that can be checked without external systems were checked, the parts that require Bill's hands (a real bootstrap run against Project B from `private-context.md`, a real voice transcript, real Slack/PR sweeps, a clean Codex install, post-push mobile/desktop visual check) are enumerated below so they aren't lost. The mechanical pass caught one real defect that would otherwise have wasted Bill's time at first install — fixed it here rather than deferring. Did not push commits to publish the GitHub Pages site; pushing remote is outside the scope of an implementation phase and requires Bill's explicit go-ahead.
+
+**Mechanical validation done in this phase:**
+
+- Plugin loads and all six shipped skills are discoverable via `claude --plugin-dir ./plugin -p "..."` (verified by asking the model to confirm `notes`, `plan`, `sprint`, `bootstrap`, `docs-update`, `pr-review` are present — all six returned `yes`).
+- Surfaced and fixed a real bug: the documented local-testing command pointed `--plugin-dir` at the repo root, which silently failed to load any skills. `--plugin-dir` must point at the directory holding `.claude-plugin/plugin.json`, i.e. `./plugin`. Corrected in `README.md` (Local Testing section), `AGENTS.md` (Useful commands), and `docs-site/getting-started.html`. Re-ran the load check after the fix — all six skills load.
+- All six skill `SKILL.md` files have valid `name:` and `description:` frontmatter with pushy, trigger-phrase-rich descriptions; no frontmatter rewrites were necessary.
+- No company-internal identifiers (`foreflight`, `vector`, `jeppesen`, `FFM`) leaked into the public surface (`plugin/`, `docs-site/`, `README.md`) — `grep` returned zero matches.
+- All internal HTML links in `docs-site/` resolve to existing files (10 pages, every `href` that isn't an external URL or anchor was cross-checked against the filesystem).
+- README install sections mirror `swift-app-architecture/README.md`: `## Installation` with `### Claude Code` and `### OpenAI Codex` subsections, Codex via TUI `/plugins`, `~/.codex/config.toml` toggle, Troubleshooting block.
+- The plan's Phase 11 text says "all seven skills" but only six ship (`notes`, `plan`, `sprint`, `bootstrap`, `docs-update`, `pr-review`). The "seven" was a slip earlier in the plan — reconciliation is a *mode* of `plan`, not its own skill, per Phase 8's resolution. Six is correct.
+
+**Hands-on validation still required by Bill (the items the plan calls out as on-real-projects):**
+
+- Run `bootstrap` against Project B (smallest validation target named in `private-context.md`); confirm the proposed plan-of-changes is sensible and that the `AGENTS.md` it stages reflects Project B's real sources.
+- Paste a real voice transcript and confirm the `notes` skill writes to `notes/YYYY-MM-DD-<slug>.md` in that project.
+- Run `plan` in a project with a real `AGENTS.md` and confirm only the matching reference documents (`jira.md`/`confluence.md`/`slack.md`/`local.md`) load.
+- Walk through `sprint` end-to-end and confirm a real sprint file lands at `plans/sprints/<date>.md`.
+- Read-only sweeps of `docs-update` against the project's real Slack channel and `pr-review` against a real open PR. Do not approve any writes during validation.
+- Install on a clean Codex instance via the `/plugins` TUI and confirm the same six skills are discoverable.
+- Push the eight unpublished commits on `main` (currently `origin/main` is 8 commits behind). Once pushed, the Pages workflow will run; then confirm `https://gestrich.github.io/ai-project-planning/` renders on desktop and mobile and that every internal link resolves. (The site config is in place — `build_type: workflow`, source `main` — and is waiting for the first remote commit to trigger a deploy.)
+
+**Outcome:** mechanical validation is green and one real defect (`--plugin-dir` path) was corrected before it could trip up a first-time install. The remaining real-project validations are explicit and can be picked up directly by Bill in any order.
 
 **Skills to read**: `skill-creator`
 

@@ -48,8 +48,10 @@ codex plugin marketplace remove gestrich-project-planning
 ### Local Testing (Claude Code)
 
 ```bash
-claude --plugin-dir ~/path/to/ai-project-planning
+claude --plugin-dir ~/path/to/ai-project-planning/plugin
 ```
+
+`--plugin-dir` points at the directory that holds `.claude-plugin/plugin.json` — that's `./plugin` inside this repo, not the repo root.
 
 ## Skills
 

@@ -49,6 +49,6 @@ Free-form markdown, not enforced YAML. The skills read it in natural language.
 
 ## Useful commands
 
-- Load the plugin locally without installing: `claude --plugin-dir .`
+- Load the plugin locally without installing: `claude --plugin-dir ./plugin` (point at the directory holding `.claude-plugin/plugin.json`, not the repo root)
 - List the shipped skills: `ls plugin/skills`
 - Check the marketplace metadata: `cat .claude-plugin/marketplace.json`
