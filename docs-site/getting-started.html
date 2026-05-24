@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting started — Project Planning</title>
+<meta name="description" content="End-to-end walkthrough for bootstrapping a new project onto the project-planning plugin.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <nav aria-label="Primary">
+    <a href="index.html" class="site-title">Project Planning</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="configuration.html">Configuration</a>
+      <a href="https://github.com/gestrich/ai-project-planning">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <article>
+    <span class="tag">Walkthrough</span>
+    <h1>Getting started</h1>
+    <p class="lede">A walkthrough for bootstrapping a fresh project onto the plugin and running the skills end-to-end.</p>
+
+    <section>
+      <h2>1. Install the plugin</h2>
+      <p>Install on whichever runtime you use — instructions live in the repo README:</p>
+      <ul>
+        <li><a href="https://github.com/gestrich/ai-project-planning#claude-code">Install on Claude Code</a></li>
+        <li><a href="https://github.com/gestrich/ai-project-planning#openai-codex">Install on OpenAI Codex</a></li>
+      </ul>
+      <p>If you'd rather not install yet, you can point Claude Code at a local checkout:</p>
+<pre><code>claude --plugin-dir ~/path/to/ai-project-planning</code></pre>
+    </section>
+
+    <section>
+      <h2>2. Bootstrap an existing project</h2>
+      <p>Open a Claude/Codex session inside the project you want to onboard, then say:</p>
+<pre><code>bootstrap this project for project planning</code></pre>
+      <p>The <a href="skills/bootstrap.html"><code>bootstrap</code></a> skill runs in three phases:</p>
+      <ol>
+        <li><strong>Survey.</strong> Reads <code>AGENTS.md</code>, scans for existing notes/plans folders, peeks at commit history for hints of Jira/Confluence/Slack usage, and lists the project's GitHub remote. Read-only.</li>
+        <li><strong>Propose.</strong> Shows you a plan-of-changes — folders to create, files to move (via <code>git mv</code>), and the <code>## Project Planning</code> section it wants to add to <code>AGENTS.md</code>. You answer a few clarifying questions inline.</li>
+        <li><strong>Apply.</strong> Only after you say "looks good" / "go ahead" / "apply", the skill makes the changes and summarizes what landed.</li>
+      </ol>
+      <p>After bootstrap finishes, your project has a <code>notes/</code> folder, a <code>plans/</code> folder, a <code>plans/sprints/</code> folder, and a populated <code>## Project Planning</code> section in <code>AGENTS.md</code>. See the <a href="configuration.html">Configuration</a> page for what that section looks like.</p>
+    </section>
+
+    <section>
+      <h2>3. Capture a brain dump</h2>
+      <p>Paste a transcript or brain dump into the conversation:</p>
+<pre><code>here's my brain dump — yeah so I was thinking about the auth migration, we need to figure out
+whether to do the rollout in one shot or stage it, and there's that Jira ticket about the
+session token storage that I haven't read yet...</code></pre>
+      <p>The <a href="skills/notes.html"><code>notes</code></a> skill writes it verbatim to <code>notes/YYYY-MM-DD-&lt;slug&gt;.md</code> and confirms the path. No cleanup, no rewriting.</p>
+    </section>
+
+    <section>
+      <h2>4. Ask what the plan is</h2>
+<pre><code>what's the plan?</code></pre>
+      <p>The <a href="skills/plan.html"><code>plan</code></a> skill reads your <code>AGENTS.md</code>, loads only the reference documents matching the sources you declared (Jira, Confluence, local <code>plans/</code>, Slack-as-context), and synthesizes a short, source-cited view of the project's direction.</p>
+    </section>
+
+    <section>
+      <h2>5. Plan the week</h2>
+<pre><code>what should I focus on this week?</code></pre>
+      <p>The <a href="skills/sprint.html"><code>sprint</code></a> skill gathers recent notes, reads the plan sources, looks at the previous sprint file (if any), and pulls a week of Slack activity from the configured channel. It then acts as a scrum-master coach — asks the questions that need answering before drafting a sprint file at <code>plans/sprints/YYYY-MM-DD.md</code>. The draft is shown inline; the file isn't written until you sign off.</p>
+    </section>
+
+    <section>
+      <h2>6. Weekly hygiene</h2>
+      <p>Two skills compose into a weekly cadence:</p>
+      <ul>
+        <li><a href="skills/docs-update.html"><code>docs-update</code></a> sweeps the configured Slack channel for the last week and proposes documentation updates against Confluence (or your local docs folder).</li>
+        <li><a href="skills/pr-review.html"><code>pr-review</code></a> reviews an open PR against the project's documented conventions and surfaces both PR-side findings and doc-update suggestions in one pass.</li>
+      </ul>
+      <p>Both skills are read-only by default. Anything they want to write — a Confluence page edit, a PR comment, a message to another team — waits for your explicit confirmation.</p>
+    </section>
+
+    <section>
+      <h2>7. Reconciliation</h2>
+      <p>When the local <code>plans/</code> folder and external sources start to drift, ask:</p>
+<pre><code>sync plans — what's drifted, what should graduate, what's stale?</code></pre>
+      <p>The <a href="skills/plan.html"><code>plan</code></a> skill's reconciliation mode compares local <code>plans/</code> against Jira/Confluence and groups the findings by graduation candidates, drift, and stale items. Each acted-on item is its own confirmation; a single "apply everything" is too coarse for hygiene work that spans multiple sources.</p>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Project Planning plugin</span>
+    <span><a href="https://github.com/gestrich/ai-project-planning/blob/main/plugin/LICENSE">MIT License</a> · <a href="https://github.com/gestrich/ai-project-planning">Source on GitHub</a></span>
+  </div>
+</footer>
+</body>
+</html>

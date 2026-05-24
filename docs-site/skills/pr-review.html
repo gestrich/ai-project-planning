@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pr-review — Project Planning</title>
+<meta name="description" content="The pr-review skill fetches a GitHub PR, cross-references the diff against the project's documented conventions, and surfaces both PR-side findings and doc-update suggestions.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="site-header">
+  <nav aria-label="Primary">
+    <a href="../index.html" class="site-title">Project Planning</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../configuration.html">Configuration</a>
+      <a href="https://github.com/gestrich/ai-project-planning">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <article>
+    <span class="tag">Skill</span>
+    <h1><code>pr-review</code></h1>
+    <p class="lede">Documentation-aware GitHub PR review. Fetches a PR, cross-references the diff against the project's documented conventions, and surfaces findings in both directions: PR-side and docs-side.</p>
+
+    <dl class="skill-meta">
+      <dt>Reads</dt>
+      <dd>The GitHub repo(s) declared in <code>AGENTS.md</code> (via the <code>gh</code> CLI when available, GitHub REST API otherwise); the documentation sources declared in <code>AGENTS.md</code> (Confluence pages, local docs, <code>plans/</code>).</dd>
+      <dt>Writes</dt>
+      <dd>Posts PR comments via <code>gh pr review</code>/<code>gh pr comment</code> only after explicit confirmation. Stages doc edits with the same discipline as <a href="docs-update.html"><code>docs-update</code></a>.</dd>
+      <dt>Configuration</dt>
+      <dd>Requires at least one GitHub repo declared in <code>AGENTS.md</code>. A documentation source is strongly recommended — without one the skill can only summarize the diff with no documented baseline to compare against.</dd>
+    </dl>
+
+    <section>
+      <h2>What it does</h2>
+      <p>A PR-side finding is "the diff diverges from what the docs say should happen." A docs-side finding is "the diff introduces a pattern or decision the docs don't reflect yet." The two are produced together. A PR that adopts a new pattern isn't necessarily wrong; sometimes the docs are stale. Reporting both sides lets you decide which way to close the gap.</p>
+
+      <p>The skill runs in three phases: <strong>fetch → cross-reference → propose</strong>. Everything before phase 3 is read-only.</p>
+
+      <h3>1. Fetch</h3>
+      <ul>
+        <li>Resolve the repo from <code>AGENTS.md</code>. If you give a full PR URL, the skill takes the repo from the URL and confirms it appears in <code>AGENTS.md</code> — if it doesn't, asks once (the PR may belong to a different project).</li>
+        <li>Use the <code>gh</code> CLI when available. Fall back to the GitHub REST API only when <code>gh</code> isn't installed.</li>
+        <li>Pull the PR description, the changed-file list, the diff, and the head SHA. The head SHA is captured so any later comment doesn't end up on a stale diff.</li>
+        <li><strong>No local checkout in v1.</strong> Intentional — keeps the skill portable and avoids dragging in build/test machinery.</li>
+      </ul>
+
+      <h3>2. Cross-reference</h3>
+      <p>For each meaningful change in the diff, look up what the project's documentation says about that area. The documentation sources are whichever ones <code>AGENTS.md</code> declares:</p>
+      <ul>
+        <li><strong>Confluence pages</strong> — via <code>plan/confluence.md</code> (Atlassian MCP schemas loaded via <code>ToolSearch</code>, fetched as markdown for inspection).</li>
+        <li><strong>Local docs</strong> — files inside the project, typically under <code>docs/</code> or <code>plans/</code>.</li>
+        <li><strong>Plan files</strong> — <code>plans/plan.md</code> and the domain documents it references.</li>
+      </ul>
+      <p>The goal isn't to mechanically grep for filenames mentioned in the docs. For each load-bearing change in the diff, the skill asks: <em>is there documented guidance that speaks to this, and does the change match it?</em> Renamed local variables don't trigger a lookup; a new public API, a changed architectural boundary, a new dependency, a different error-handling pattern, a deviation from a naming convention — those do.</p>
+
+      <h3>3. Propose</h3>
+      <p>Two clearly-separated sections, shown inline.</p>
+
+      <h4>A. PR review against documented conventions</h4>
+      <p>For each PR-side finding:</p>
+      <ul>
+        <li><strong>What the divergence is</strong> — the specific change, the file/line range, what the docs say should happen instead.</li>
+        <li><strong>Where the doc lives</strong> — the page, file, or section being relied on.</li>
+        <li><strong>Severity</strong> — how load-bearing the divergence is. The skill grades; it does not mark everything as critical.</li>
+        <li><strong>Suggested resolution</strong> — change the PR, update the doc, or accept the divergence as a one-off with a comment in the PR explaining why.</li>
+      </ul>
+      <p>If the diff doesn't diverge from anything documented, the skill says so plainly. An empty PR-side section is a valid outcome.</p>
+
+      <h4>B. Documentation update suggestions</h4>
+      <p>For each docs-side finding: what the docs are missing, where it should land, and why it's worth landing. This output shape intentionally mirrors <a href="docs-update.html"><code>docs-update</code></a> so the two skills compose cleanly in a weekly cadence.</p>
+
+      <h3>3a. Act (only after explicit confirmation)</h3>
+      <ul>
+        <li><strong>PR comments</strong> — drafted inline first. Before posting, re-check the head SHA; if it's moved, the skill surfaces that and re-fetches rather than commenting on a stale diff.</li>
+        <li><strong>Doc edits</strong> — same write discipline as <a href="docs-update.html"><code>docs-update</code></a>. Confluence reads use the read-before-write protocol strictly. In-repo doc edits show the proposed diff and wait for confirmation.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>When to reach for it</h2>
+      <ul>
+        <li>"review this PR", "review PR #123", "what do you think of this PR"</li>
+        <li>"is this PR aligned with our docs", "does this match our conventions"</li>
+        <li>"check the open PRs for doc drift", "sweep open PRs"</li>
+        <li>Pasting a bare GitHub PR URL into the conversation when <code>AGENTS.md</code> declares that repo.</li>
+      </ul>
+      <p>If you're asking for a <em>generic</em> code review without doc cross-referencing — "look for bugs in this PR" — that's a different job; this skill is specifically the documented-conventions read.</p>
+    </section>
+
+    <section>
+      <h2>What this skill does <em>not</em> do</h2>
+      <ul>
+        <li><strong>It does not check out the PR locally</strong> in v1. Diffs come from the GitHub API.</li>
+        <li><strong>It does not run tests, linters, or builds.</strong> The PR's own CI handles that.</li>
+        <li><strong>It does not post PR comments or edit docs without explicit confirmation.</strong> Read-before-write applies to both directions.</li>
+        <li><strong>It does not generate generic code review feedback</strong> (style nits, micro-optimizations, subjective preferences). Findings must trace back to something the project's docs actually say, or to a docs-shaped gap the PR exposes.</li>
+        <li>It does not modify local <code>notes/</code> or <code>plans/</code>.</li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Project Planning plugin</span>
+    <span><a href="https://github.com/gestrich/ai-project-planning/blob/main/plugin/LICENSE">MIT License</a> · <a href="https://github.com/gestrich/ai-project-planning">Source on GitHub</a></span>
+  </div>
+</footer>
+</body>
+</html>

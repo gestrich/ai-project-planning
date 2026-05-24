@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration — Project Planning</title>
+<meta name="description" content="How to declare the project-planning section in a project's AGENTS.md so the plugin's skills know which sources apply.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <nav aria-label="Primary">
+    <a href="index.html" class="site-title">Project Planning</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="getting-started.html">Getting started</a>
+      <a href="https://github.com/gestrich/ai-project-planning">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <article>
+    <span class="tag">Reference</span>
+    <h1>Configuration</h1>
+    <p class="lede">A project opts into the plugin by adding a <code>## Project Planning</code> section to its <code>AGENTS.md</code>. Free-form markdown — no enforced schema. The skills read it in natural language.</p>
+
+    <section>
+      <h2>Where it lives</h2>
+      <p><code>AGENTS.md</code> sits at the project root and is the standard cross-runtime instruction file (Claude Code reads <code>CLAUDE.md</code>; keep it as a symlink to <code>AGENTS.md</code> so both runtimes find the same content).</p>
+      <p>The <code>## Project Planning</code> section is one section among many; the rest of <code>AGENTS.md</code> remains whatever the project already has.</p>
+    </section>
+
+    <section>
+      <h2>A worked example</h2>
+      <p>Use this as a starting point. Drop subsections that don't apply; add project-specific notes where they help.</p>
+<pre><code>## Project Planning
+
+This project uses the [project-planning plugin](https://github.com/gestrich/ai-project-planning).
+
+### Sources of truth
+
+- **Jira**: project key `EXAMPLE`, primary epic `EXAMPLE-100`. Issues here are authoritative for shipped work.
+- **Confluence**: space `EX`, root page id `123456`. Long-form plans and decisions live here.
+- **Local `plans/`**: in-incubation ideas and personal items. Not authoritative for shipped work.
+- **Slack**: `#example-team` (id `C0123456789`) is the canonical channel — read-only context.
+
+### GitHub repos
+
+- `acme-org/example-service` — primary backend
+- `acme-org/example-web` — web client
+
+### Skills used by this project
+
+- `notes` — dump raw voice transcripts into `notes/`. Use when I paste a brain-dump.
+- `plan` — synthesize what's in motion across Jira, Confluence, and `plans/`. Use when I ask "what's the plan" or "where are we on X".
+- `sprint` — pick what to do this week given recent notes, Jira, and the previous sprint file. Use when I ask "what should I do next".
+- `bootstrap` — re-run if the planning shape changes (new Slack channel, new repo, etc.).
+- `docs-update` — sweep last week of the Slack channel for things that should land in Confluence. Use weekly.
+- `pr-review` — review PRs against the docs declared above. Use when I paste a PR URL.
+
+### Project-specific notes
+
+The web client mirrors the backend's REST contract; PR reviews should check both sides when an endpoint changes.
+</code></pre>
+    </section>
+
+    <section>
+      <h2>What each subsection does</h2>
+      <h3>Sources of truth</h3>
+      <p>Tells <a href="skills/plan.html"><code>plan</code></a> which reference documents to load. A Jira project key triggers <code>plan/jira.md</code>; a Confluence space and root page id trigger <code>plan/confluence.md</code>; a Slack channel id (marked for context) triggers <code>plan/slack.md</code>; a mention of <code>plans/</code> as a source triggers <code>plan/local.md</code>.</p>
+      <p>Mark which source is authoritative for shipped work. When both <code>plans/</code> and an external system are listed, the plugin treats the external system as the source of truth and <code>plans/</code> as supplementary unless told otherwise.</p>
+
+      <h3>GitHub repos</h3>
+      <p>Used by <a href="skills/pr-review.html"><code>pr-review</code></a> to know which repos belong to the project. List them in <code>owner/repo</code> form. The first repo is usually the one the project is checked out as.</p>
+
+      <h3>Skills used by this project</h3>
+      <p>The most important subsection. Enumerate each plugin skill the project uses, with a one-line <strong>what it's for / when to reach for it</strong> note. This gives any future session immediate orientation without needing to read each <code>SKILL.md</code> upfront, and lets skills check the list before firing on ambiguous triggers.</p>
+      <p>Omit skills the project doesn't use. Don't pad.</p>
+
+      <h3>Project-specific notes</h3>
+      <p>Anything project-specific the skills should know — cross-repo invariants, naming conventions, default sprint cadence, whether the docs are owned by another team, etc.</p>
+    </section>
+
+    <section>
+      <h2>Read-by-default discipline</h2>
+      <p>Every skill in the plugin reads freely but never writes without explicit confirmation. That applies to local file edits as well as Jira transitions, Confluence edits, Slack sends, and PR comments. The proposal list a skill shows you is not the confirmation — each individual action is.</p>
+    </section>
+
+    <section>
+      <h2>Folder layout in the project</h2>
+      <p>Folder layout lives in the <em>project</em>, not the plugin:</p>
+<pre><code>your-project/
+├── AGENTS.md            # contains the section above
+├── notes/               # raw transcripts (created by `notes`)
+└── plans/               # local planning artifacts
+    ├── plan.md          # manifest pointing at the other plan files
+    └── sprints/         # one file per sprint, dated by start of week
+</code></pre>
+      <p>The <a href="skills/bootstrap.html"><code>bootstrap</code></a> skill creates these folders and the <code>AGENTS.md</code> section in a single guided pass.</p>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Project Planning plugin</span>
+    <span><a href="https://github.com/gestrich/ai-project-planning/blob/main/plugin/LICENSE">MIT License</a> · <a href="https://github.com/gestrich/ai-project-planning">Source on GitHub</a></span>
+  </div>
+</footer>
+</body>
+</html>

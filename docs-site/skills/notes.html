@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>notes — Project Planning</title>
+<meta name="description" content="The notes skill writes raw voice transcripts and brain dumps verbatim to the project's notes/ folder.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="site-header">
+  <nav aria-label="Primary">
+    <a href="../index.html" class="site-title">Project Planning</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../configuration.html">Configuration</a>
+      <a href="https://github.com/gestrich/ai-project-planning">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <article>
+    <span class="tag">Skill</span>
+    <h1><code>notes</code></h1>
+    <p class="lede">The simplest entry point in the plugin: capture a raw transcript or brain dump and write it, verbatim, into the project's <code>notes/</code> folder.</p>
+
+    <dl class="skill-meta">
+      <dt>Reads</dt>
+      <dd>Nothing. The input is the prompt.</dd>
+      <dt>Writes</dt>
+      <dd><code>notes/YYYY-MM-DD-&lt;slug&gt;.md</code> in the project root.</dd>
+      <dt>Configuration</dt>
+      <dd>None. Works in any project the moment it's installed.</dd>
+    </dl>
+
+    <section>
+      <h2>What it does</h2>
+      <p>Notes captured here are <strong>raw artifacts</strong>, not plans. The skill writes the transcript verbatim — no cleanup, no rewriting, no summarization, no headers added. Downstream skills (<a href="plan.html"><code>plan</code></a>, <a href="sprint.html"><code>sprint</code></a>) may read these notes later, but <code>notes</code> never edits a note after creating it.</p>
+    </section>
+
+    <section>
+      <h2>When to reach for it</h2>
+      <p>Explicit triggers:</p>
+      <ul>
+        <li>"here's my brain dump"</li>
+        <li>"voice transcript"</li>
+        <li>"dump this into notes"</li>
+        <li>"capture this", "save this transcript"</li>
+      </ul>
+      <p>Implicit triggers: a long, unstructured, first-person block that looks like a spoken transcript — rambling sentences, conversational filler ("um", "so", "yeah"), repeated ideas, no headings. If it reads like you talking to yourself, the skill treats it as a transcript even if you don't name it.</p>
+    </section>
+
+    <section>
+      <h2>Walkthrough</h2>
+      <p>You paste a brain dump:</p>
+<pre><code>here's a quick brain dump on the auth migration — so we've got two options, either flip the
+whole org over in one shot or stage it by team, and I keep going back and forth because the
+staged version means we have to maintain two code paths for a couple of weeks...</code></pre>
+      <p>The skill:</p>
+      <ol>
+        <li>Runs <code>date +%Y-%m-%d</code> to get today's date.</li>
+        <li>Picks a short slug (2–4 words, kebab-case) from the content — e.g., <code>auth-migration-options</code>.</li>
+        <li>Writes the transcript verbatim to <code>notes/2026-05-24-auth-migration-options.md</code>.</li>
+        <li>Confirms the path back to you in one sentence.</li>
+      </ol>
+      <p>If <code>notes/</code> doesn't exist, the skill creates it. If a file with the exact same name already exists, it appends a short suffix (<code>-2</code>) rather than overwriting.</p>
+    </section>
+
+    <section>
+      <h2>What this skill does <em>not</em> do</h2>
+      <ul>
+        <li>It does not edit, summarize, restructure, or "clean up" the transcript.</li>
+        <li>It does not extract action items, decisions, or todos. Those belong to downstream skills.</li>
+        <li>It does not modify or delete previously written notes.</li>
+        <li>It does not enforce a filename convention beyond the leading <code>YYYY-MM-DD-</code> date prefix.</li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Project Planning plugin</span>
+    <span><a href="https://github.com/gestrich/ai-project-planning/blob/main/plugin/LICENSE">MIT License</a> · <a href="https://github.com/gestrich/ai-project-planning">Source on GitHub</a></span>
+  </div>
+</footer>
+</body>
+</html>

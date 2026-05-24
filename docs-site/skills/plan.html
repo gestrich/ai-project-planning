@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>plan — Project Planning</title>
+<meta name="description" content="The plan skill reads a project's AGENTS.md to discover which planning sources apply, then synthesizes a source-cited view of the project's direction.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="site-header">
+  <nav aria-label="Primary">
+    <a href="../index.html" class="site-title">Project Planning</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../configuration.html">Configuration</a>
+      <a href="https://github.com/gestrich/ai-project-planning">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <article>
+    <span class="tag">Skill</span>
+    <h1><code>plan</code></h1>
+    <p class="lede">The project-aware entry point for "where are we and what's next?" — and the reconciliation entry point for "what's drifted, what should graduate, what's stale?"</p>
+
+    <dl class="skill-meta">
+      <dt>Reads</dt>
+      <dd>The project's <code>AGENTS.md</code>, plus whichever planning sources it declares (Jira, Confluence, local <code>plans/</code>, Slack-as-context).</dd>
+      <dt>Writes</dt>
+      <dd>Nothing directly. Routes write requests to per-source reference documents, which gate writes behind explicit confirmation.</dd>
+      <dt>Configuration</dt>
+      <dd>The <code>## Project Planning</code> section in <code>AGENTS.md</code> — see <a href="../configuration.html">Configuration</a>.</dd>
+    </dl>
+
+    <section>
+      <h2>What it does</h2>
+      <p>The <code>plan</code> skill doesn't assume any particular planning system. It reads the project's <code>AGENTS.md</code> to find out which sources of truth the project uses, then loads only the reference documents that match — keeping context lean and avoiding patterns that don't apply.</p>
+      <ol>
+        <li><strong>Reads <code>AGENTS.md</code></strong> at the project root and locates the project-planning section.</li>
+        <li><strong>Identifies which planning sources apply</strong> — any combination of Jira, Confluence, the local <code>plans/</code> folder, or a Slack channel for context.</li>
+        <li><strong>Loads only the matching reference documents</strong> from <code>plugin/skills/plan/</code>:
+          <ul>
+            <li><code>jira.md</code> — Jira read/write discipline</li>
+            <li><code>confluence.md</code> — Confluence read-before-write discipline</li>
+            <li><code>slack.md</code> — Slack as read-only context capture</li>
+            <li><code>local.md</code> — the <code>plans/</code> folder convention</li>
+          </ul>
+        </li>
+        <li><strong>Synthesizes a short, source-cited view</strong>, grouped by area (UI, infra, telemetry, …), surfacing what's awaiting you at the top.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>When to reach for it</h2>
+      <p>Default mode — synthesize a current view:</p>
+      <ul>
+        <li>"what's the plan", "what's the plan for X"</li>
+        <li>"what's next", "what should I be looking at"</li>
+        <li>"show me the plans", "where are we on Y", "what's the status of Z"</li>
+        <li>"catch me up on this project", "give me the rundown"</li>
+      </ul>
+      <p>Reconciliation mode — compare local <code>plans/</code> against external sources:</p>
+      <ul>
+        <li>"sync plans", "reconcile with Jira", "reconcile the docs"</li>
+        <li>"what's drifted", "what should graduate", "what's stale in plans/"</li>
+        <li>"is the local plan still aligned with Jira/Confluence"</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Default mode</h2>
+      <p>A good <code>plan</code> response is:</p>
+      <ul>
+        <li><strong>Source-cited.</strong> Every statement traces to Jira (with issue keys), Confluence (with page link), the local <code>plans/</code> file path, or the Slack message permalink. If a fact has no source, the skill flags it as inference.</li>
+        <li><strong>Grouped by area, not by source.</strong> You think in terms of workstreams; the skill pulls from all sources into one coherent view, then cites per item.</li>
+        <li><strong>Surface what's awaiting you.</strong> Decisions, blockers, asks aimed at you — those go at the top.</li>
+        <li><strong>Honest about gaps.</strong> If a source is stale or a Jira epic hasn't been touched in three weeks, the skill says so rather than fabricating motion.</li>
+      </ul>
+      <p>If <code>AGENTS.md</code> has no project-planning section, the skill says so plainly and offers to run <a href="bootstrap.html"><code>bootstrap</code></a> instead of guessing the planning shape from the repo.</p>
+    </section>
+
+    <section>
+      <h2>Reconciliation mode</h2>
+      <p>Reconciliation answers three questions, side-by-side:</p>
+      <ol>
+        <li><strong>Graduation candidates.</strong> Items in <code>plans/</code> that are firm enough they should live in the external source of truth now.</li>
+        <li><strong>Drift.</strong> Cases where <code>plans/</code> and the external source disagree about the same item — a Jira issue marked <code>Done</code> while the local plan still has it "in flight", etc.</li>
+        <li><strong>Stale local items.</strong> Bullets in <code>plans/</code> that the external source has overtaken — an idea that's now shipped, a question answered in a Confluence page, a workstream deprioritized in Jira.</li>
+      </ol>
+      <p>The report is grouped by these three questions, not by source — that's how you think about hygiene. Every actionable item shows up; the skill doesn't trim to a "top N" because under-reporting hides the work.</p>
+      <p>If <code>plans/</code> is the project's sole source of truth (no external system declared), there's nothing to reconcile against — the skill says so and stops. Same if no <code>plans/</code> exists in the first place.</p>
+    </section>
+
+    <section>
+      <h2>Writes are gated</h2>
+      <p>The <code>plan</code> skill itself doesn't perform mutations. When you ask for a write that touches a planning source — updating a Confluence page, transitioning a Jira issue, deleting stale local content — it defers to the reference document for that source, each of which carries the appropriate read-before-write or explicit-authorization rules. In reconciliation mode each acted-on item is its own confirmation; a single "apply everything" is too coarse for reports that often span 10+ items across multiple sources.</p>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Project Planning plugin</span>
+    <span><a href="https://github.com/gestrich/ai-project-planning/blob/main/plugin/LICENSE">MIT License</a> · <a href="https://github.com/gestrich/ai-project-planning">Source on GitHub</a></span>
+  </div>
+</footer>
+</body>
+</html>

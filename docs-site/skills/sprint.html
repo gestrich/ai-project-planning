@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sprint — Project Planning</title>
+<meta name="description" content="The sprint skill acts as a scrum-master coach: gathers context, asks the questions that need answering, and drafts a sprint file once you sign off.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="site-header">
+  <nav aria-label="Primary">
+    <a href="../index.html" class="site-title">Project Planning</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../configuration.html">Configuration</a>
+      <a href="https://github.com/gestrich/ai-project-planning">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <article>
+    <span class="tag">Skill</span>
+    <h1><code>sprint</code></h1>
+    <p class="lede">The scrum-master capability: helps you pick what to do this week given everything that's already in motion. Surfaces decisions; doesn't make them.</p>
+
+    <dl class="skill-meta">
+      <dt>Reads</dt>
+      <dd>Recent files in <code>notes/</code>, the previous sprint file in <code>plans/sprints/</code>, the configured planning sources (via <a href="plan.html"><code>plan</code></a>), and the Slack channel declared in <code>AGENTS.md</code> (read-only, last week).</dd>
+      <dt>Writes</dt>
+      <dd><code>plans/sprints/YYYY-MM-DD.md</code> (start of week) after explicit confirmation.</dd>
+      <dt>Configuration</dt>
+      <dd>Same as <a href="plan.html"><code>plan</code></a> — uses whatever's declared in <code>AGENTS.md</code>.</dd>
+    </dl>
+
+    <section>
+      <h2>What it does</h2>
+      <p>The <code>sprint</code> skill is a coach, not an automated planner. It gathers context, asks the questions that need answering before a sprint can be decided, and only writes a sprint file once you've signed off on the draft.</p>
+      <ol>
+        <li><strong>Resolve the sprint start date</strong> with <code>date +%Y-%m-%d</code> (Monday of the current or upcoming week — asks you if it's ambiguous).</li>
+        <li><strong>Gather context</strong>: recent <code>notes/</code> files, the configured plan sources (delegating to <a href="plan.html"><code>plan</code></a>'s reference documents), the most recent file in <code>plans/sprints/</code>, and a week of Slack activity from the configured channel.</li>
+        <li><strong>Coach.</strong> Surface the implicit decisions in any candidate sprint shape, then ask the challenging questions — which workstream is most at risk of slipping, what's been carried over and is it still right, what's surfaced in notes that hasn't been triaged, what's awaiting a decision you can make right now, what's <em>not</em> going in and are you okay with that.</li>
+        <li><strong>Draft the sprint file</strong> inline. Path: <code>plans/sprints/&lt;YYYY-MM-DD&gt;.md</code>.</li>
+        <li><strong>Confirm explicitly, then write.</strong> Edits are cheap; surprise files are not.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>When to reach for it</h2>
+      <ul>
+        <li>"what should I do next", "what should I focus on this week"</li>
+        <li>"what's on deck", "what's load-bearing right now", "what should I prioritize"</li>
+        <li>"plan my sprint", "let's plan the sprint", "next sprint", "kick off the new sprint"</li>
+        <li>Anything that asks for a focused, time-boxed view of the coming week's work, even if the word "sprint" isn't used.</li>
+      </ul>
+      <p>If you're asking for a <em>current-state</em> synthesis ("what's the plan", "where are we"), that's <a href="plan.html"><code>plan</code></a>. <code>sprint</code> is specifically about <em>picking what to do next</em>.</p>
+    </section>
+
+    <section>
+      <h2>Sprint file shape (loose)</h2>
+      <p>The skill encourages this shape; it doesn't enforce it.</p>
+<pre><code># Sprint: &lt;YYYY-MM-DD&gt;
+
+## On deck
+
+### &lt;Domain — e.g. UI&gt;
+- [ ] item, with a one-line *why* and a source link (Jira key, Confluence page, plans/ file, or note path)
+
+### &lt;Domain — e.g. infra&gt;
+- [ ] ...
+
+### Personal / cross-cutting
+- [ ] ...
+
+## Carried over
+- [ ] items from last sprint still in flight, with a note on what's blocking them
+
+## Decisions awaiting Bill
+- the choice that's gating something on this sprint
+
+## Out of scope this week
+- things considered and explicitly deferred (so the next sprint isn't confused about why they're missing)
+</code></pre>
+      <p>Domains come from the project itself — the skill reads the project's <code>plans/</code> domain documents or <code>AGENTS.md</code> to discover them. It doesn't invent new domains the project hasn't already named.</p>
+    </section>
+
+    <section>
+      <h2>What this skill does <em>not</em> do</h2>
+      <ul>
+        <li>It does not write to external systems. No Jira transitions, no Confluence edits, no Slack posts.</li>
+        <li>It does not modify <code>notes/</code> or domain documents in <code>plans/</code>. It reads them.</li>
+        <li>It does not enforce a sprint cadence or template. Two-week sprints, custom shapes — the skill follows your lead.</li>
+        <li>It does not auto-roll items from the previous sprint. Carrying something over is a decision, not a default.</li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Project Planning plugin</span>
+    <span><a href="https://github.com/gestrich/ai-project-planning/blob/main/plugin/LICENSE">MIT License</a> · <a href="https://github.com/gestrich/ai-project-planning">Source on GitHub</a></span>
+  </div>
+</footer>
+</body>
+</html>

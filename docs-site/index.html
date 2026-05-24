@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Planning — a Claude/Codex plugin</title>
+<meta name="description" content="A Claude Code and OpenAI Codex plugin for capturing notes, navigating plans, running sprints, syncing with Jira/Confluence/Slack, and reviewing PRs against project documentation.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <nav aria-label="Primary">
+    <a href="index.html" class="site-title">Project Planning</a>
+    <div class="nav-links">
+      <a href="getting-started.html">Getting started</a>
+      <a href="configuration.html">Configuration</a>
+      <a href="https://github.com/gestrich/ai-project-planning">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <article>
+    <h1>Project Planning</h1>
+    <p class="lede">A plugin for Claude Code and OpenAI Codex that gives you a consistent gateway into any project — capture notes, navigate plans, plan sprints, sync with external sources of truth, and review PRs against your own documentation.</p>
+
+    <section>
+      <h2>What it is</h2>
+      <p>Project Planning is a project-agnostic plugin. Drop it into a new project, declare a short <code>## Project Planning</code> section in the project's <code>AGENTS.md</code>, and the skills figure out which sources apply (Jira, Confluence, a local <code>plans/</code> folder, Slack-as-context, or some combination) and read only what's relevant.</p>
+      <p>Every skill is read-by-default. Any external write — a Jira transition, a Confluence edit, a Slack send, a PR comment, a local file change — only happens after you explicitly confirm it. The skills surface decisions; they don't make them.</p>
+    </section>
+
+    <section>
+      <h2>Install</h2>
+      <p>The plugin installs on both Claude Code and Codex. Follow the instructions in the repo README:</p>
+      <ul>
+        <li><a href="https://github.com/gestrich/ai-project-planning#claude-code">Install on Claude Code</a></li>
+        <li><a href="https://github.com/gestrich/ai-project-planning#openai-codex">Install on OpenAI Codex</a></li>
+      </ul>
+      <p>Once installed, run the <a href="skills/bootstrap.html"><code>bootstrap</code></a> skill in an existing project to wire it up. See the <a href="getting-started.html">Getting Started</a> walkthrough for an end-to-end example.</p>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <p>Each skill is triggered by natural-language prompts — you don't need to name the skill. Pick one to read more.</p>
+      <div class="cards">
+        <a class="card" href="skills/notes.html">
+          <h3>notes</h3>
+          <p>Capture raw voice transcripts and brain dumps verbatim into the project's <code>notes/</code> folder.</p>
+        </a>
+        <a class="card" href="skills/plan.html">
+          <h3>plan</h3>
+          <p>Synthesize what's in motion across the project's planning sources — and reconcile local plans against external sources of truth.</p>
+        </a>
+        <a class="card" href="skills/sprint.html">
+          <h3>sprint</h3>
+          <p>Coach you through picking what to do this week, then draft a sprint file once you sign off.</p>
+        </a>
+        <a class="card" href="skills/bootstrap.html">
+          <h3>bootstrap</h3>
+          <p>Survey an existing project, propose a plan-of-changes, and onboard it to the planning convention.</p>
+        </a>
+        <a class="card" href="skills/docs-update.html">
+          <h3>docs-update</h3>
+          <p>Sweep last week's discussion for things that should land in the docs.</p>
+        </a>
+        <a class="card" href="skills/pr-review.html">
+          <h3>pr-review</h3>
+          <p>Review a GitHub PR against the project's documented conventions and surface doc gaps the PR exposes.</p>
+        </a>
+      </div>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Project Planning plugin</span>
+    <span><a href="https://github.com/gestrich/ai-project-planning/blob/main/plugin/LICENSE">MIT License</a> · <a href="https://github.com/gestrich/ai-project-planning">Source on GitHub</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -272,9 +272,10 @@ Documentation pass. The README must include install instructions for **both** Cl
 
 Outcome: a project installable on either runtime by following the README.
 
-## - [ ] Phase 10: GitHub Pages site
+## - [x] Phase 10: GitHub Pages site
 
-**Skills to read**: `skill-creator`
+**Skills used**: `skill-creator` (re-read for description-tuning and progressive-disclosure conventions, applied to the per-skill HTML pages — each skill page mirrors the SKILL.md voice without copying it). Also re-read the existing six `plugin/skills/<name>/SKILL.md` files in this plugin to keep the page summaries faithful to the actual behavior, triggers, reads/writes, and negative-space declarations.
+**Principles applied**: GitHub Pages' branch source only allows `/` or `/docs`, and the plan reserves `docs/` for planning documents — switched to the Actions deploy workflow (`actions/configure-pages` + `actions/upload-pages-artifact` + `actions/deploy-pages`) so the site can ship from `docs-site/` as the phase specified, with `build_type: workflow` enabled via the Pages REST API. Wrote plain static HTML, no JS, no build step — one shared `style.css` (serif body / sans-serif chrome, generous whitespace, two-column card grid above 720px, subtle accent for tables and blockquotes). Semantic HTML throughout (`<header>`, `<nav>`, `<main>`, `<article>`, `<section>`, `<dl>` for the skill metadata block) for accessibility and reasonable default rendering. Per-skill pages all share the same structure (lede → reads/writes/configuration metadata → what it does → when to reach for it → walkthrough/examples → what this skill does *not* do) so a visitor scanning the site can compare skills at a glance — mirrors the explicit "negative space" stance in each SKILL.md. Every page carries a back-to-home link and a GitHub link in the header and an MIT-license link in the footer per the phase spec. All content is company-agnostic (synthetic `acme-org/example-service`, `EXAMPLE-100`, `C0123456789` placeholders only) — no internal project names, channel IDs, or repo paths leaked into the published HTML. Skipped a `CNAME` per the phase spec ("leave that out for v1"). Did not write a `docs-site/README.md` or any extra markdown — the phase only calls for HTML pages, and the global instruction against unrequested doc files applies.
 
 A public-facing HTML site hosted on GitHub Pages from this repo, walking visitors through what the plugin does, what each skill does, and how to use them. Plain static HTML (no build step, no framework).
 

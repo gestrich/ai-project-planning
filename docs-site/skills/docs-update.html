@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>docs-update — Project Planning</title>
+<meta name="description" content="The docs-update skill sweeps the configured Slack channel for the last week, cross-references the docs, and proposes documentation updates.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="site-header">
+  <nav aria-label="Primary">
+    <a href="../index.html" class="site-title">Project Planning</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../configuration.html">Configuration</a>
+      <a href="https://github.com/gestrich/ai-project-planning">GitHub</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <article>
+    <span class="tag">Skill</span>
+    <h1><code>docs-update</code></h1>
+    <p class="lede">Closes the loop between team discussion (usually Slack) and canonical documentation (usually Confluence). Reads recent activity, proposes updates, never writes silently.</p>
+
+    <dl class="skill-meta">
+      <dt>Reads</dt>
+      <dd>The Slack channel declared in <code>AGENTS.md</code> (last week, read-only) and the documentation source declared in <code>AGENTS.md</code> (Confluence pages, an in-repo <code>docs/</code> folder, etc.).</dd>
+      <dt>Writes</dt>
+      <dd>When the project owns the docs: stages a Confluence edit (with read-before-write discipline) or an in-repo doc edit after explicit confirmation. When another team owns the docs: drafts a short message to that team — does not send it.</dd>
+      <dt>Configuration</dt>
+      <dd>Requires a Slack channel and a documentation source declared in <code>AGENTS.md</code>. Without those, the skill says so and stops.</dd>
+    </dl>
+
+    <section>
+      <h2>What it does</h2>
+      <p>The skill runs in three phases: <strong>gather → propose → stage</strong>. Gather and propose are read-only; nothing leaves the project until you confirm.</p>
+
+      <h3>1. Gather</h3>
+      <ul>
+        <li>Resolve the time window (default: last seven days; use <code>date +%Y-%m-%d</code> to anchor it). Honor a different window if you name one.</li>
+        <li>Read the Slack channel named in <code>AGENTS.md</code>, read-only — load Slack MCP schemas via <code>ToolSearch</code>, pull load-bearing threads, resolve user IDs to names, capture permalinks.</li>
+        <li>Read the documentation source declared in <code>AGENTS.md</code> — Confluence (with the read-before-write discipline), or in-repo docs. Don't skip this step; proposing updates without re-reading what the docs currently say is how you propose duplicates and contradictions.</li>
+      </ul>
+
+      <h3>2. Propose</h3>
+      <p>Produces a structured list of proposed updates. Each item carries:</p>
+      <ul>
+        <li><strong>What the update is</strong> — a clarification, a missing answer, a recurring question, a decision needing a permanent home.</li>
+        <li><strong>Where it should land</strong> — the specific doc/page/section. If ambiguous, surfaces as a question.</li>
+        <li><strong>Why it's worth landing</strong> — the Slack permalink that prompted it.</li>
+        <li><strong>Who owns the doc</strong> — the project (we can stage the write) or another team (we draft a message instead).</li>
+      </ul>
+      <p>Good proposals usually fall into a few shapes:</p>
+      <ul>
+        <li>A question got asked more than once in different threads → the answer deserves a permanent home.</li>
+        <li>A decision was made in a thread but the doc still describes the prior approach → the doc needs an update.</li>
+        <li>A concept the team is using freely in chat doesn't appear in the docs at all → it needs to be introduced.</li>
+        <li>The doc is correct but ambiguous enough that people keep asking the same clarifying question → tighten the wording.</li>
+      </ul>
+      <p>One-off questions that got one-off answers don't count. The skill uses judgment about what's recurring vs. transient.</p>
+
+      <h3>3. Stage</h3>
+      <ul>
+        <li><strong>Project owns the doc.</strong> Offers to stage the edit. For Confluence, follows the read-before-write discipline: read live HTML, capture the version, compose the update as a delta, surface unexpected content, write back with the version for optimistic concurrency. For in-repo docs, shows the proposed diff inline and waits for confirmation.</li>
+        <li><strong>Another team owns the doc.</strong> Drafts a short message — what's changed, the Slack permalink, a concrete suggested edit. Hands it to you for the actual send. This skill does not post.</li>
+      </ul>
+      <p>The proposal list is not the confirmation. Each acted-on item is its own explicit ask.</p>
+    </section>
+
+    <section>
+      <h2>When to reach for it</h2>
+      <ul>
+        <li>"update the docs", "what should be in the docs", "what's missing from the docs"</li>
+        <li>"review last week's Slack for doc updates", "sweep Slack for doc updates"</li>
+        <li>"what should we have written down", "anything to land in Confluence from Slack"</li>
+        <li>A recurring weekly check on whether the documented state still matches reality.</li>
+      </ul>
+      <p>If you're asking a <em>one-shot</em> question that just happens to need docs context ("what does the spec say about X"), that's <a href="plan.html"><code>plan</code></a>. <code>docs-update</code> is the sweep — discussion in, doc proposals out.</p>
+    </section>
+
+    <section>
+      <h2>What this skill does <em>not</em> do</h2>
+      <ul>
+        <li>It does not post to Slack. Drafting a message to another team is fine; sending it is not this skill's job.</li>
+        <li>It does not write to documentation without explicit confirmation. Read-before-write applies to every body-content mutation.</li>
+        <li>It does not summarize the channel for catch-up purposes — that's <a href="plan.html"><code>plan</code></a> in Slack-as-context mode.</li>
+        <li>It does not modify local <code>notes/</code> or <code>plans/</code>.</li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>Project Planning plugin</span>
+    <span><a href="https://github.com/gestrich/ai-project-planning/blob/main/plugin/LICENSE">MIT License</a> · <a href="https://github.com/gestrich/ai-project-planning">Source on GitHub</a></span>
+  </div>
+</footer>
+</body>
+</html>
