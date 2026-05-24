@@ -95,7 +95,10 @@ Keep the skills loose and the spec loose. Skills get iterated as they're used, n
 
 ## Phases
 
-## - [ ] Phase 1: Scaffold the plugin repo
+## - [x] Phase 1: Scaffold the plugin repo
+
+**Skills used**: `skill-creator` (read for frontmatter/description conventions — no SKILL.md files authored in this phase, but reviewed in preparation for Phases 2+)
+**Principles applied**: Mirrored `swift-app-architecture`'s dual-runtime layout exactly (top-level `.claude-plugin/marketplace.json`, `plugin/.claude-plugin/plugin.json`, `plugin/.codex-plugin/plugin.json` with `"skills": "./skills/"`). Kept manifests minimal (name, version, description, author, keywords) — nothing speculative. Used `.gitkeep` files to commit the empty `plugin/skills/`, `.claude/skills/`, and `docs/completed/` directories. Plugin shell verified loadable via `claude --plugin-dir`.
 
 **Skills to read**: `skill-creator`
 
