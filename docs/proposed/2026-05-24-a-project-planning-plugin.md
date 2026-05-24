@@ -176,7 +176,10 @@ The "scrum master" capability. Helps pick what to do next given everything that'
 
 Outcome: an interactive sprint-planning capability that produces a single sprint file per week.
 
-## - [ ] Phase 5: `bootstrap` skill
+## - [x] Phase 5: `bootstrap` skill
+
+**Skills used**: `skill-creator` (re-read for frontmatter conventions, "pushy" description tuning, and the explain-the-why writing-style guidance). Also re-read the existing `notes`, `plan`, and `sprint` SKILL.md files in this plugin to keep voice, vocabulary, and write-discipline patterns consistent.
+**Principles applied**: Wrote a pushy description that names explicit trigger phrases ("bootstrap this project", "set up project planning here", "make this project work with the planning plugin") *and* the implicit shape ("a user landing in a fresh repo and asking what they need to add so the other skills will work"), so the skill fires even when the skill name isn't said. Split the behavior into named **survey → propose → apply** phases so the model can't accidentally skip the confirmation gate — the phase boundaries are the gate. Made source detection explicitly *best-effort hints to confirm with the user*, never assertions, per the phase spec's "guess... best-effort, never assert" language. Required `git mv` over copy-delete to preserve history. Included a worked `## Project Planning` AGENTS.md example so future bootstrap runs (and human readers) have a concrete shape to mirror — but framed it as a starting point, not an enforced schema, matching the plan's "free-form markdown, not enforced YAML" stance. Most importantly: gave the skill-enablement list first-class billing with the per-skill "what it's for / when to reach for it" one-liner, since the plan's resolved open question singled that out as the load-bearing detail. Stated the negative space ("does not do X") to keep bootstrap from drifting into running other skills, writing to external systems, or silent edits. Suggested cross-skill behavior at the end (when `plan` lands in an unbootstrapped project it should suggest `bootstrap`) so the on-ramp is discoverable.
 
 **Skills to read**: `skill-creator`
 
