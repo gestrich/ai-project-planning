@@ -194,7 +194,10 @@ The migration on-ramp. Run inside an existing project to get it into a shape thi
 
 Outcome: a repeatable way to onboard a new project to this convention without hand-editing.
 
-## - [ ] Phase 6: `docs-update` skill
+## - [x] Phase 6: `docs-update` skill
+
+**Skills used**: `skill-creator` (re-read for description-tuning guidance and progressive-disclosure structure). Also re-read the existing `plan/slack.md` and `plan/confluence.md` reference documents in this plugin, plus the `sprint` and `bootstrap` SKILL.md files, to keep voice, vocabulary, and write-discipline patterns consistent.
+**Principles applied**: Wrote a pushy description naming explicit trigger phrases ("update the docs", "what should we have written down", "review last week's Slack for doc updates") *and* the implicit shape (a recurring weekly hygiene pass against recent discussion), so the skill fires even when the user doesn't say its name. Split behavior into named **gather → propose → stage** phases so the model can't accidentally skip the confirmation gate — phase boundaries are the gate. Drew a sharp boundary against `plan`: `plan` answers "what does the doc say?", `docs-update` answers "what should the doc say given what's been happening in Slack?". Deferred all Slack and Confluence read mechanics to the existing `plan/slack.md` and `plan/confluence.md` reference docs rather than redefining them, per the plan's "don't duplicate the wiring" stance. Enumerated the four real shapes a good proposal takes (recurring questions, decisions overtaking the doc, new concepts not in the doc, ambiguity causing repeat clarifications) so the model has a discrimination heuristic instead of treating every Slack message as a doc gap. Distinguished project-owned docs (stage a write under read-before-write discipline) from other-team-owned docs (draft a message, never send) per the phase spec. Used `date +%Y-%m-%d` for the time window per the global `AGENTS.md` rule against guessing the current date. Stated the negative space ("does not post to Slack", "does not modify notes/plans") to keep the skill from drifting. Kept the spec terse — the phase explicitly says refine after running against a real channel.
 
 **Skills to read**: `skill-creator`
 
