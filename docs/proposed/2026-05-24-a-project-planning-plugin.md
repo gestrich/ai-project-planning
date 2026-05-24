@@ -213,9 +213,10 @@ Closes the loop between Slack discussions and canonical documentation. Loose by 
 
 Outcome: a weekly "what should we have written down?" sweep.
 
-## - [ ] Phase 7: `pr-review` skill
+## - [x] Phase 7: `pr-review` skill
 
-**Skills to read**: `skill-creator`
+**Skills used**: `skill-creator` (re-read for description-tuning guidance and progressive-disclosure structure). Also re-read the existing `docs-update`, `plan`, and `plan/confluence.md` files in this plugin to keep voice, vocabulary, write-discipline patterns, and output-shape conventions consistent.
+**Principles applied**: Wrote a pushy description naming explicit trigger phrases ("review this PR", "review PR #123", "is this PR aligned with our docs", "check the open PRs for doc drift") *and* the implicit shape (a bare GitHub PR URL pasted with a request for feedback), so the skill fires even when the user doesn't name it. Split behavior into named **fetch → cross-reference → propose** phases with a separate **3a. Act** gate so the model can't accidentally skip the confirmation step — phase boundaries are the gate. Made the dual-output structure (PR-side findings + docs-side findings) first-class because the phase spec calls it out as load-bearing; deliberately mirrored the docs-side proposal shape on `docs-update`'s format so the two skills compose cleanly in a weekly cadence. Preferred `gh` CLI per Bill's global `AGENTS.md` preference, with GitHub REST API as fallback. Documented "no local checkout in v1" explicitly per the phase spec, framed as intentional (portability, no build/test machinery) rather than a temporary limitation. Deferred all Confluence read mechanics to `plan/confluence.md` and local-docs/plan-file reading to `plan/local.md` rather than redefining them, per the plan's "don't duplicate the wiring" stance. Required severity grading on PR-side findings to prevent the model from flagging everything as critical (which defeats triage). Required the head SHA re-check before posting any comment to avoid commenting on a stale diff. Stated the negative space sharply ("does not run tests/linters/builds", "does not generate generic code review feedback", "findings must trace back to documented guidance or a docs-shaped gap") to keep the skill from drifting into a generic code-review tool.
 
 GitHub PR review that consults the project's documentation and surfaces both PR-side and docs-side findings.
 
