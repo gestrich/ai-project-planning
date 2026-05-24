@@ -157,7 +157,10 @@ The configurable, project-aware skill. Reads `AGENTS.md` to discover what planni
 
 Outcome: land in any project, ask "what's the plan?", and the skill figures out whether to read Jira, Confluence, the local `plans/` folder, or some combination.
 
-## - [ ] Phase 4: `sprint` skill
+## - [x] Phase 4: `sprint` skill
+
+**Skills used**: `skill-creator` (read for "pushy" description tuning, progressive-disclosure structure, and the explanation-over-MUSTs writing-style guidance). Also re-read the existing `plan` and `notes` SKILL.md files in this plugin to keep voice, vocabulary, and write-discipline patterns consistent.
+**Principles applied**: Wrote a pushy description that names explicit trigger phrases ("what should I do next", "plan my sprint", "what's on deck") *and* describes the implicit shape (focused, time-boxed, forward-looking) so the skill fires even when the user doesn't say "sprint". Drew a clear boundary against `plan`: `plan` = "where are we?", `sprint` = "what should this week be?" — deferred all external-source read mechanics to `plan/<source>.md` instead of redefining them. Framed the skill as a *coach* per the phase spec — it surfaces the load-bearing decisions and asks challenging questions, never auto-derives a sprint. Gated the file write behind an explicit confirmation step (show draft inline first), matching the write discipline of the reference docs. Used the `date` shell command for the sprint date per the global `AGENTS.md` rule against guessing. Kept the sprint file shape as a "reasonable default" rather than an enforced template, per the plan's simplicity bar and the skill-creator guidance against rigid MUSTs. Stated the negative space ("does not do X") to keep the skill from drifting into Jira transitions, Slack posts, or modifying notes/domain docs.
 
 **Skills to read**: `skill-creator`
 
