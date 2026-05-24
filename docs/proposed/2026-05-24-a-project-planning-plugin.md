@@ -253,7 +253,10 @@ No standalone `sync` skill. Reconciliation lives as a mode of the `plan` skill, 
 
 Outcome: reconciliation is discoverable from the same entry point already used for planning, without inflating the skill count.
 
-## - [ ] Phase 9: README, AGENTS.md, and dual-runtime install instructions
+## - [x] Phase 9: README, AGENTS.md, and dual-runtime install instructions
+
+**Skills used**: `skill-creator` (re-read for description-tuning, progressive-disclosure structure, and the "explain the why over rigid MUSTs" writing-style guidance). Also read `swift-app-architecture/README.md` to mirror its dual-runtime install structure exactly, since the plan singles that README out as the model.
+**Principles applied**: Mirrored `swift-app-architecture/README.md` section-for-section — `## Installation` with `### Claude Code` and `### OpenAI Codex` subsections, Codex via TUI `/plugins` menu, `~/.codex/config.toml` toggle, the same Troubleshooting gotchas. Kept the Skills table tight (skill / trigger / one-line description) and listed reconciliation mode as a `plan`-subtype row rather than a separate entry, since Phase 8 explicitly chose not to make it a standalone skill. Wrote the Configuration section with a single synthetic example — no company names, no internal project codenames, no real channel/page/project IDs — per `private-context.md`'s reminder. Framed `AGENTS.md` as a worked example for consuming projects to mirror (per the phase spec) rather than as a planning-section declaration for this repo itself, since the plugin doesn't plan itself with the plugin. Kept `CLAUDE.md` as a symlink to `AGENTS.md` (unchanged from Phase 1). Stated the read-by-default discipline once in the README and once in `AGENTS.md` — the consistent write-discipline message that runs through every skill in this plugin.
 
 **Skills to read**: `skill-creator`
 
