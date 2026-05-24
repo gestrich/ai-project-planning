@@ -6,7 +6,7 @@ A Claude/Codex plugin that gives Bill a consistent gateway into any of his proje
 
 ## Relevant Skills
 
-There is no project-local `CLAUDE.md` yet, so skills are drawn from Bill's global skill set. Only skills directly relevant to building this plugin are listed.
+There is no project-local `AGENTS.md` yet, so skills are drawn from Bill's global skill set. Only skills directly relevant to building this plugin are listed.
 
 | Skill | Description |
 |-------|-------------|
@@ -50,7 +50,7 @@ ai-project-planning/
 ├── docs/
 │   ├── proposed/
 │   └── completed/
-├── CLAUDE.md
+├── AGENTS.md                       # AI instructions (CLAUDE.md is a symlink → AGENTS.md)
 └── README.md                       # Install instructions for Claude Code AND Codex
 ```
 
@@ -111,7 +111,7 @@ Lay down the directory shape modeled on `swift-app-architecture`. No skill conte
 - Create `plugin/LICENSE` (MIT, to match the `swift-app-architecture` repo's stance).
 - Create `.claude/skills/` directory for dev-time-only skills (currently empty).
 - Create `docs/proposed/` and `docs/completed/` (`docs/proposed/` already exists for this plan).
-- Create an initial `CLAUDE.md` declaring the same conventions as `swift-app-architecture/CLAUDE.md` (single-source-of-truth for skills is `plugin/skills/`; `docs/proposed/` and `docs/completed/` track planning docs).
+- Create an initial `AGENTS.md` at the repo root with the project conventions (single-source-of-truth for skills is `plugin/skills/`; `docs/proposed/` and `docs/completed/` track planning docs). Add `CLAUDE.md` as a symlink to `AGENTS.md` so Claude Code finds it under the expected filename.
 - Verify the plugin loads without skills: `claude --plugin-dir <repo>` should at least not error.
 
 Outcome: empty but valid plugin shell.
@@ -119,7 +119,7 @@ Outcome: empty but valid plugin shell.
 ## - [x] Phase 2: `notes` skill (foundational, no config)
 
 **Skills used**: `skill-creator` (read for frontmatter conventions, description-tuning guidance, and progressive-disclosure structure)
-**Principles applied**: Wrote a "pushy" description that names explicit trigger phrases *and* describes the implicit shape of a raw transcript, since the plan calls out both signals. Kept SKILL.md short and loose — no rigid template, no enforced slug style beyond the date prefix, since the plan's simplicity bar explicitly warns against over-specifying. Stated the negative space ("what this skill does *not* do") so downstream skills (`plan`, `sprint`) own derivation rather than this one. Used the `date` shell command for the date prefix per the global CLAUDE.md rule against guessing the current date. Removed the placeholder `plugin/skills/.gitkeep` now that the directory has real content.
+**Principles applied**: Wrote a "pushy" description that names explicit trigger phrases *and* describes the implicit shape of a raw transcript, since the plan calls out both signals. Kept SKILL.md short and loose — no rigid template, no enforced slug style beyond the date prefix, since the plan's simplicity bar explicitly warns against over-specifying. Stated the negative space ("what this skill does *not* do") so downstream skills (`plan`, `sprint`) own derivation rather than this one. Used the `date` shell command for the date prefix per the global `AGENTS.md` rule against guessing the current date. Removed the placeholder `plugin/skills/.gitkeep` now that the directory has real content.
 
 **Skills to read**: `skill-creator`
 
@@ -209,7 +209,7 @@ GitHub PR review that consults the project's documentation and surfaces both PR-
 
 - `plugin/skills/pr-review/SKILL.md` — fires on "review this PR", "is this PR aligned with our docs", "check the open PRs for doc drift".
 - Behavior:
-  1. Read the GitHub repo(s) declared in `AGENTS.md` (`gh` CLI when available per the user's global CLAUDE.md preferences; GitHub API otherwise).
+  1. Read the GitHub repo(s) declared in `AGENTS.md` (`gh` CLI when available per the user's global `AGENTS.md` preferences; GitHub API otherwise).
   2. For a given PR, fetch the diff via the API (no local checkout in v1 — keep it simple).
   3. Cross-reference against the documentation declared in `AGENTS.md` (Confluence pages, local docs, etc.).
   4. Output two sections: (a) PR review against documented conventions, (b) documentation update suggestions when the PR introduces patterns or decisions that aren't reflected in the docs.
@@ -237,7 +237,7 @@ No standalone `sync` skill. Reconciliation lives as a mode of the `plan` skill, 
 
 Outcome: reconciliation is discoverable from the same entry point already used for planning, without inflating the skill count.
 
-## - [ ] Phase 9: README, CLAUDE.md, and dual-runtime install instructions
+## - [ ] Phase 9: README, AGENTS.md, and dual-runtime install instructions
 
 **Skills to read**: `skill-creator`
 
@@ -249,8 +249,7 @@ Documentation pass. The README must include install instructions for **both** Cl
   - Troubleshooting block — model on the same README's troubleshooting section; same Claude Code gotchas apply here.
   - "Skills" table: skill name, trigger phrase, one-line description for each of the seven skills above.
   - "Configuration" section: how to declare project-planning in `AGENTS.md`, with one short generic example. Free-form markdown, not YAML. No company names, no internal project names — synthetic placeholders only.
-- `CLAUDE.md`: a short version of the README's most important conventions, plus a pointer that `plugin/skills/` is the single source of truth.
-- Add an `AGENTS.md` example file at the repo root (this repo's own `AGENTS.md` configuration), serving as a worked example for any project bootstrapping itself.
+- `AGENTS.md`: expand the Phase 1 starter into a fuller declaration of this repo's own conventions — `plugin/skills/` is the single source of truth, where planning docs live, where skill drafts live. Also serves as a worked example for any project bootstrapping itself onto this convention. `CLAUDE.md` stays a symlink to `AGENTS.md`.
 
 Outcome: a project installable on either runtime by following the README.
 
