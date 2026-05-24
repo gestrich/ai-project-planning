@@ -116,7 +116,10 @@ Lay down the directory shape modeled on `swift-app-architecture`. No skill conte
 
 Outcome: empty but valid plugin shell.
 
-## - [ ] Phase 2: `notes` skill (foundational, no config)
+## - [x] Phase 2: `notes` skill (foundational, no config)
+
+**Skills used**: `skill-creator` (read for frontmatter conventions, description-tuning guidance, and progressive-disclosure structure)
+**Principles applied**: Wrote a "pushy" description that names explicit trigger phrases *and* describes the implicit shape of a raw transcript, since the plan calls out both signals. Kept SKILL.md short and loose — no rigid template, no enforced slug style beyond the date prefix, since the plan's simplicity bar explicitly warns against over-specifying. Stated the negative space ("what this skill does *not* do") so downstream skills (`plan`, `sprint`) own derivation rather than this one. Used the `date` shell command for the date prefix per the global CLAUDE.md rule against guessing the current date. Removed the placeholder `plugin/skills/.gitkeep` now that the directory has real content.
 
 **Skills to read**: `skill-creator`
 
