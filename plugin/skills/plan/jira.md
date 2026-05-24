@@ -71,3 +71,17 @@ The project's `AGENTS.md` should give you, at minimum:
 When the user asks about "the plan" generally, default to: open issues in the named project(s), ordered by recent updates, grouped by epic. When they ask about a sub-area, narrow the JQL by component, label, or epic.
 
 If `AGENTS.md` doesn't name the project key and you can't find it from one short search, ask — don't fabricate keys.
+
+## Reconciliation
+
+When the `plan` skill enters reconciliation mode and Jira is one of the project's sources of truth, the comparison is between bullets in `plans/` and live issues in Jira.
+
+What each of the three reconciliation questions looks like for Jira:
+
+- **Graduation candidates.** Bullets in `plans/` that describe concrete work, have an apparent owner (or "me"), and would naturally be tracked as a Jira issue if the user had the energy to file them. Surface these as "should this become a Jira issue under `<EPIC-KEY>`?" rather than auto-filing them. Match against existing issues first — search by keywords from the bullet via `searchJiraIssuesUsingJql` so duplicates aren't manufactured.
+- **Drift.** A `plans/` bullet that describes the same work as an existing Jira issue but with a different status, owner, or framing. The most common shape is a `plans/` doc that still says "in flight" while the Jira issue is `Done`, or a `plans/` decision that contradicts what the Jira issue's most recent comment says. Show both sides side-by-side, cite the issue key, and ask the user which side is now correct — don't infer.
+- **Stale local items.** Bullets in `plans/` whose corresponding Jira issue is closed or whose epic has been deprioritized. These are candidates to archive locally; surface the matching issue key as the evidence.
+
+To make the comparison tractable, scope the Jira read to what `AGENTS.md` actually names — the project key, the epics, the board. Don't query the whole Jira instance.
+
+If reconciliation produces an action — graduating a bullet, transitioning an issue, adding a comment that reflects a local decision — the write discipline from this document still applies: show the exact change, get explicit confirmation, then execute. One confirmation per action, not one for the whole batch.

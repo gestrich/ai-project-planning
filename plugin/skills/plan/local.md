@@ -81,3 +81,25 @@ The project's `AGENTS.md` should give you, at minimum:
 - Optionally, a list of expected domain documents (`ui`, `infra`, `testing`, …) so the skill knows what to expect even before reading the manifest.
 
 If `AGENTS.md` is silent on `plans/` but the folder exists, treat it as supplementary and surface in the synthesis that the project's mode is undeclared.
+
+## Reconciliation
+
+When the `plan` skill enters reconciliation mode, this document covers the *local* half of the comparison — the half that's always present, paired with whichever external source `jira.md` and/or `confluence.md` cover.
+
+For projects where `plans/` is the sole source of truth, reconciliation is a no-op: there's nothing external to reconcile against. Say so and stop. The user may be looking for a sprint review instead — point them at the `sprint` skill.
+
+For projects where `plans/` is supplementary to an external source, the three reconciliation questions break down on the local side as:
+
+- **Graduation candidates.** Bullets in domain documents that have firmed up — a "decided" section that's stable, a workstream that's now being actively executed, an idea that has crossed from incubation into commitment. These are candidates to move into Jira (as issues) or Confluence (as canonical doc content). The graduation itself is a write against the external source — defer to `jira.md` / `confluence.md` for that — but the *identification* of the candidate is a local read.
+- **Drift.** Statements in `plans/` that no longer match what the external source says. The user wrote a decision down locally, then the team's Jira / Confluence record evolved without the local note catching up (or vice versa). Show both and let the user pick which is now correct.
+- **Stale local items.** Content in `plans/` that's been overtaken — work that shipped, decisions that were superseded, questions that have been answered in Confluence. Candidates to archive or delete from `plans/`; the local-file write discipline below applies.
+
+### How to read `plans/` for reconciliation
+
+Reconciliation needs the *whole* local picture, not a slice. Read `plans/plan.md` and then read each domain document it names. Skipping documents here will under-report drift and graduation — the whole point of the mode is to be comprehensive.
+
+The manifest's "Personal / incubation" section (`ideas.md`, `decisions.md`, etc.) matters more than usual for reconciliation: that's where graduation candidates accumulate. Read those even if the user didn't explicitly ask about them.
+
+### Local writes from reconciliation
+
+If reconciliation produces a local action — deleting a stale bullet, archiving a domain document, updating the manifest to drop a graduated workstream — the local write discipline from this document still applies: show the proposed change before applying it. Reconciliation tends to produce *several* small local edits at once; confirm each one individually rather than batching them under a single "go ahead." Local files are the user's thinking, and a batch confirmation tends to bury one or two items the user would have wanted to keep.

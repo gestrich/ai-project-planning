@@ -59,3 +59,17 @@ The project's `AGENTS.md` should give you, at minimum:
 When the user asks about "the plan" generally, start from the root page. When they ask about a sub-area, walk the descendant tree from the root rather than guessing IDs.
 
 If `AGENTS.md` lacks any of this and you can't infer it from one short search, ask the user — don't fabricate page IDs.
+
+## Reconciliation
+
+When the `plan` skill enters reconciliation mode and Confluence is one of the project's sources of truth, the comparison is between content in `plans/` and the live state of the configured Confluence pages.
+
+What each of the three reconciliation questions looks like for Confluence:
+
+- **Graduation candidates.** Content in `plans/` that's firmed up — decisions made, designs converged, status that the broader team should be able to find — but is still only in a local markdown file. The Confluence page is where shipped thinking belongs; surface these as "this section of `plans/<doc>.md` looks ready to move onto the `<page name>` Confluence page" and ask before drafting the edit.
+- **Drift.** A statement in `plans/` and a statement in the matching Confluence page that disagree — the local doc says one decision was made, the Confluence page describes a different one. This is usually because someone updated the Confluence page directly and the local notes didn't catch up, or vice versa. Show both, link the Confluence page, ask the user which is now correct. Do not silently pick a winner.
+- **Stale local items.** Content in `plans/` that the Confluence page has already absorbed (often with better framing). These are candidates to delete locally; surface the matching Confluence section as the evidence so the user can sanity-check before pruning.
+
+Always read the live Confluence page before declaring drift — a stale local *read* of Confluence (a previous `getConfluencePage` output reused from earlier in the session) will manufacture false drift. The page may have been updated since.
+
+If reconciliation produces an action — graduating local content onto a Confluence page, or rewriting a section to resolve drift — the read-before-write cycle from this document still applies in full. Read the live page with `contentFormat: "html"`, capture the version, diff against your intended write, ask if anything looks unexpected, then `updateConfluencePage` with that version. The fact that the change came from reconciliation rather than a direct ask doesn't relax the discipline.

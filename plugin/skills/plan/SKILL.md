@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Show what the plan is for the current project — what's in motion, what's next, what's blocked — by reading whichever planning sources the project uses (Jira, Confluence, a local plans/ folder, Slack-as-context, or some combination). Use this skill whenever the user asks "what's the plan", "what's next", "where are we on X", "show me the plans", "what's the plan for <area>", "catch me up on this project", "what's the status", or anything that asks for a synthesized view of the project's direction. Trigger even when the user does not name a specific source — figuring out which sources apply is the skill's job. The skill reads the project's AGENTS.md to discover which sources are configured and then loads only the matching reference documents in plugin/skills/plan/.
+description: Show what the plan is for the current project — what's in motion, what's next, what's blocked — by reading whichever planning sources the project uses (Jira, Confluence, a local plans/ folder, Slack-as-context, or some combination). Use this skill whenever the user asks "what's the plan", "what's next", "where are we on X", "show me the plans", "what's the plan for <area>", "catch me up on this project", "what's the status", or anything that asks for a synthesized view of the project's direction. Also use this skill in reconciliation mode when the user asks "sync plans", "reconcile with Jira", "reconcile the docs", "what's drifted", "what should graduate", "is the local plan still aligned with Jira", or anything that asks to compare local plans/ against external sources of truth. Trigger even when the user does not name a specific source — figuring out which sources apply is the skill's job. The skill reads the project's AGENTS.md to discover which sources are configured and then loads only the matching reference documents in plugin/skills/plan/.
 ---
 
 # plan
@@ -34,6 +34,12 @@ Fire on explicit asks for project direction or status:
 - Anything that asks for a synthesized view of work-in-flight, regardless of whether the user names a specific source.
 
 If the user names a specific source ("check Jira", "read the Confluence page"), still go through this skill — the reference documents are the right place for the read patterns — but you can skip loading the references that don't apply.
+
+Also fire on reconciliation asks — see the **Reconciliation mode** section at the bottom of this file:
+
+- "sync plans", "reconcile with Jira", "reconcile the docs"
+- "what's drifted", "what should graduate", "what's stale in plans/"
+- "is the local plan still aligned with Jira/Confluence"
 
 ## Vocabulary
 
@@ -74,4 +80,30 @@ When the user asks for a write that touches a planning source (updating a Conflu
 
 ## Reconciliation mode
 
-Reconciliation between local `plans/` and external sources lives as a mode of this skill, not a separate skill. The Phase 8 work in the project's planning doc adds it. Until then, the read/synthesis behavior above is the whole surface area.
+Reconciliation between local `plans/` and external sources of truth (Jira, Confluence) lives as a mode of this skill rather than a separate `sync` skill. The trigger phrases are listed under **When to trigger** above. Use this mode when the user wants to know what's drifted, what should graduate, or what's gone stale — not when they want a fresh status read (that's the default mode).
+
+### What reconciliation answers
+
+Three questions, side-by-side:
+
+1. **Graduation candidates.** Items in `plans/` that are firm enough they should live in the external source of truth now. A `plans/ui.md` bullet that has been sitting under "decided" for two weeks and is being actively worked on belongs in a Jira issue or on the Confluence status page, not buried in a markdown file.
+2. **Drift.** Cases where `plans/` and the external source disagree about the same item — a decision recorded one way locally and a different way in Confluence, a Jira issue marked `Done` while the local plan still has it as "in flight," and so on. Drift is a pointer to a conversation the user needs to have, not a thing to silently resolve.
+3. **Stale local items.** Bullets in `plans/` that the external source has overtaken — an idea that's now shipped, a question that's been answered in a Confluence page, a workstream that's been deprioritized in Jira. These are candidates for archiving or deletion, not for graduation.
+
+### How to run reconciliation
+
+1. **Confirm `plans/` is in scope.** If `AGENTS.md` doesn't declare a local `plans/` folder, there is nothing to reconcile — say so and stop. If `plans/` is the project's *sole* source of truth, there are no external sources to reconcile against either — say so and stop.
+2. **Load the matching reference documents.** Same logic as the default mode: read `AGENTS.md`, identify which external sources apply, load `jira.md` and/or `confluence.md`. Always load `local.md` since reconciliation always touches `plans/`. Each reference document carries a **Reconciliation** subsection with the source-specific mechanics — read those, don't re-derive them here.
+3. **Read both sides in full.** Reconciliation is not a synthesis from a partial sample. Read the manifest and the named domain documents from `plans/`; read the configured Jira queries / Confluence pages in full. If you skip a source the report is misleading.
+4. **Group the report by the three questions above**, not by source. The user wants "what should graduate / what's drifted / what's stale", not "here's what Jira says, then here's what Confluence says, then here's what local says". Cite the source on each item.
+5. **Show every item the user could act on, not the top N.** Reconciliation is a hygiene pass — under-reporting hides the work.
+
+### Writes are gated, same as the rest of `plan`
+
+This skill still does not perform mutations on its own. When reconciliation surfaces an item the user wants to act on — graduating a `plans/` bullet to a new Jira issue, updating a Confluence page to reflect a decision recorded locally, deleting stale local content — defer to the matching reference document's write discipline:
+
+- New Jira issue or transition → `jira.md` "show the user the exact change, get explicit confirmation, then execute."
+- Confluence page edit → `confluence.md` read-before-write cycle with version concurrency.
+- Local file edit or delete → `local.md` "show the proposed change before applying it."
+
+Treat each acted-on item as its own confirmation. A single "go ahead and apply everything" is too coarse — reconciliation reports often contain 10+ items spanning multiple sources, and "everything" tends to obscure a few items the user didn't actually want.
