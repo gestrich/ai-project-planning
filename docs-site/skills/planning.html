@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>planning — Project Planning</title>
-<meta name="description" content="The planning skill: one skill, four modes (capture / status / sprint / reconciliation). Reads AGENTS.md to discover which planning sources apply and loads only the matching reference documents.">
+<meta name="description" content="The planning skill: capture brain dumps, show what's in motion across your project's sources, plan the week, and reconcile local plans against external sources of truth.">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -23,65 +23,78 @@
   <article>
     <span class="tag">Skill</span>
     <h1><code>planning</code></h1>
-    <p class="lede">One skill, four modes. The skill picks the mode from your ask — capture, status, sprint, or reconciliation — and reads your <code>AGENTS.md</code> to discover which planning sources apply.</p>
-
-    <dl class="skill-meta">
-      <dt>Reads</dt>
-      <dd>The project's <code>AGENTS.md</code>, <code>notes/</code>, <code>plans/</code> (manifest plus domain documents), <code>plans/sprints/</code>, and whichever external sources <code>AGENTS.md</code> declares — Jira, Confluence, Slack as read-only context.</dd>
-      <dt>Writes</dt>
-      <dd>Capture mode writes a single file to <code>notes/&lt;YYYY-MM-DD&gt;-&lt;slug&gt;.md</code>. Sprint mode writes <code>plans/sprints/&lt;YYYY-MM-DD&gt;.md</code> after you approve the draft. Status and reconciliation modes don't write anything on their own; any external mutation routes through the source-specific reference document and requires explicit confirmation.</dd>
-    </dl>
+    <p class="lede">The main entry point for managing your project. Capture brain dumps, ask what's in motion, plan the week, and reconcile your local plans against Jira/Confluence — all from one skill.</p>
 
     <section>
-      <h2>The four modes</h2>
+      <h2>What it does</h2>
 
-      <h3>Capture mode</h3>
-      <p>Triggers when you paste a long, unstructured, first-person block that reads like a spoken transcript — or when you explicitly say "here's my brain dump", "voice transcript", "dump this into notes", "capture this".</p>
-      <p>Writes the transcript verbatim to <code>notes/&lt;YYYY-MM-DD&gt;-&lt;slug&gt;.md</code>. No cleanup, no rewriting, no summarization. The raw form is the artifact.</p>
+      <h3>Capture a brain dump</h3>
+      <p>Paste a transcript or first-person rambling — voice notes, Apple Notes, anything in that shape — and it lands as a dated markdown file in <code>notes/</code> verbatim. No cleanup, no rewriting, no summarization. The raw form is the artifact, so later you can ask the skill to extract action items, decisions, or sprint candidates from it.</p>
+      <p>Try: <em>"here's my brain dump"</em>, <em>"voice transcript"</em>, or just paste the text.</p>
 
-      <h3>Status mode</h3>
-      <p>Triggers on "what's the plan", "what's next", "catch me up", "where are we on X", "what's the status". Synthesizes what's in motion across the configured planning sources.</p>
-      <p>Output is source-cited (Jira issue keys, Confluence page links, local file paths, Slack permalinks), grouped by area not by source, with asks aimed at you surfaced at the top. Short, oriented for decision-making — not a full report.</p>
+      <h3>Ask what's in motion</h3>
+      <p>Synthesizes the current state of your project across whichever sources you use — Jira issues, Confluence pages, the local <code>plans/</code> folder, recent Slack discussion. The answer is source-cited (Jira issue keys, Confluence page links, file paths, Slack permalinks), grouped by area not by source, with asks aimed at you up top. Short and oriented for decision-making — not a status report.</p>
+      <p>Try: <em>"what's the plan?"</em>, <em>"catch me up"</em>, <em>"where are we on X?"</em>, <em>"what's next?"</em></p>
 
-      <h3>Sprint mode</h3>
-      <p>Triggers on "what should I do next", "plan my sprint", "what's on deck this week", "what should I focus on". Acts as a scrum-master coach.</p>
-      <p>Gathers context from recent notes, the configured planning sources, the previous sprint file, and the configured Slack channel. Asks challenging questions about what's load-bearing before drafting <code>plans/sprints/&lt;YYYY-MM-DD&gt;.md</code>. Surfaces decisions; doesn't make them. Writes only after you approve the draft.</p>
+      <h3>Plan the week</h3>
+      <p>Acts as a scrum-master coach. Gathers context from recent notes, your planning sources, the previous sprint file, and the configured Slack channel — then asks challenging questions about what's load-bearing before drafting a sprint file. The draft is shown inline; the file isn't written until you sign off.</p>
+      <p>Try: <em>"what should I do next?"</em>, <em>"plan my sprint"</em>, <em>"what's on deck this week?"</em></p>
 
-      <h3>Reconciliation mode</h3>
-      <p>Triggers on "sync plans", "what's drifted", "what should graduate", "is the local plan still aligned with Jira/Confluence". A hygiene pass.</p>
-      <p>Compares the local <code>plans/</code> folder against the configured external sources of truth and reports three things, side-by-side: graduation candidates (firm enough to live externally now), drift (local and external disagree), and stale local items (overtaken by external decisions). Surfaces drift; never silently resolves it.</p>
+      <h3>Reconcile drift</h3>
+      <p>A hygiene pass. Compares your local <code>plans/</code> folder against external sources of truth (Jira, Confluence) and reports three things: <strong>graduation candidates</strong> (firm enough that they should live externally now), <strong>drift</strong> (local and external disagree about the same item), and <strong>stale local items</strong> (overtaken by external decisions). Surfaces drift; never silently resolves it.</p>
+      <p>Try: <em>"sync plans"</em>, <em>"what's drifted?"</em>, <em>"what should graduate?"</em>, <em>"is the local plan still aligned with Jira?"</em></p>
     </section>
 
     <section>
-      <h2>How it reads <code>AGENTS.md</code></h2>
-      <p>The skill looks for planning-relevant information in <code>AGENTS.md</code> in whatever shape you've written it — no required heading, no enforced schema. Signals it picks up:</p>
+      <h2>What it reads from <code>AGENTS.md</code></h2>
+      <p>The skill discovers your project's planning sources by reading your <code>AGENTS.md</code>. Free-form markdown — no required heading, no schema. It picks up:</p>
       <ul>
-        <li>A Jira project key, epic ID, or board URL → loads <code>jira.md</code>.</li>
-        <li>A Confluence space key, page ID, or page URL → loads <code>confluence.md</code>.</li>
-        <li>A Slack channel name or ID flagged as project context → loads <code>slack.md</code>.</li>
-        <li>A mention of <code>plans/</code> as a source, or no external system named → loads <code>local.md</code>.</li>
-        <li>A list of plugin skills the project uses, with one-line "what it's for / when to use it" notes — honored when deciding what's in scope.</li>
+        <li><strong>Jira</strong> — a project key, epic ID, or board URL tells the skill where shipped work lives.</li>
+        <li><strong>Confluence</strong> — a space, page ID, or page URL tells the skill where long-form plans and decisions live.</li>
+        <li><strong>Slack</strong> — a channel name or ID flagged for context lets the skill pull recent discussion (read-only).</li>
+        <li><strong>Local <code>plans/</code> folder</strong> — declared as a source for in-incubation ideas and personal items.</li>
+        <li><strong>GitHub repos</strong> — useful when citing work-in-flight against specific repos.</li>
+        <li><strong>Which plugin skills the project uses</strong>, with one-line notes on what each is for in this project. Honored when deciding what's in scope.</li>
       </ul>
-      <p>If <code>AGENTS.md</code> doesn't exist or has no planning-relevant content, the skill says so and offers to run <a href="bootstrap.html"><code>bootstrap</code></a> — it never guesses the planning shape from the repo contents.</p>
+      <p>If <code>AGENTS.md</code> doesn't exist or has no planning content yet, the skill says so and offers to run <a href="bootstrap.html"><code>bootstrap</code></a>. It never guesses the planning shape from your repo contents.</p>
+      <p>See <a href="../configuration.html">Configuration</a> for an example shape.</p>
     </section>
 
     <section>
-      <h2>Reference documents</h2>
-      <p>The skill loads only the reference documents that match the configured sources, keeping context lean. Each lives in <code>plugin/skills/planning/</code>:</p>
+      <h2>Project folder structure</h2>
+      <p>This skill (and <a href="bootstrap.html"><code>bootstrap</code></a>, which sets it up the first time) uses a small folder layout inside your project:</p>
+<pre><code>your-project/
+├── AGENTS.md            # planning content lives somewhere in here
+├── notes/               # raw transcripts dropped by capture
+│   └── YYYY-MM-DD-&lt;slug&gt;.md
+└── plans/               # local planning artifacts
+    ├── plan.md          # manifest pointing at the other plan files
+    ├── &lt;domain&gt;.md       # one file per area of the project (UI, infra, etc.)
+    └── sprints/
+        └── YYYY-MM-DD.md  # one file per sprint, dated by start of week
+</code></pre>
       <ul>
-        <li><code>notes.md</code> — capture mode mechanics.</li>
-        <li><code>sprint.md</code> — sprint-coaching workflow and sprint file shape.</li>
-        <li><code>jira.md</code> — Jira read/write discipline plus a reconciliation subsection.</li>
-        <li><code>confluence.md</code> — Confluence read-before-write workflow plus a reconciliation subsection.</li>
-        <li><code>slack.md</code> — Slack as read-only context capture.</li>
-        <li><code>local.md</code> — the <code>plans/</code> folder convention (manifest + domain documents + sprints) plus a reconciliation subsection.</li>
+        <li><strong><code>notes/</code></strong> — raw inputs. Created on first capture; never edited after writing.</li>
+        <li><strong><code>plans/</code></strong> — your local planning artifacts. Either the sole source of truth (if you're not using Jira/Confluence) or supplementary to them. Holds in-incubation ideas and personal items that don't belong in a team-visible system.</li>
+        <li><strong><code>plans/plan.md</code></strong> — a short manifest that lists the other files in <code>plans/</code> so the skill can navigate without prescribing a structure.</li>
+        <li><strong><code>plans/sprints/</code></strong> — one file per sprint, dated by start-of-week.</li>
+      </ul>
+      <p>Run <a href="bootstrap.html"><code>bootstrap</code></a> to create these folders in an existing project.</p>
+    </section>
+
+    <section>
+      <h2>What it writes (always with confirmation)</h2>
+      <ul>
+        <li><strong>A transcript file</strong> when you give it a brain dump (<code>notes/YYYY-MM-DD-&lt;slug&gt;.md</code>).</li>
+        <li><strong>A sprint file</strong> when you've approved the sprint draft (<code>plans/sprints/YYYY-MM-DD.md</code>).</li>
+        <li><strong>External edits</strong> (a Jira transition, a Confluence page update, etc.) only when reconciliation surfaces a graduation candidate and you explicitly approve the specific change. Treat each acted-on item as its own confirmation.</li>
       </ul>
     </section>
 
     <section>
       <h2>See also</h2>
       <ul>
-        <li><a href="bootstrap.html"><code>bootstrap</code></a> — onboard a project to this convention.</li>
+        <li><a href="bootstrap.html"><code>bootstrap</code></a> — set up the project folder structure and the planning content in <code>AGENTS.md</code>.</li>
         <li><a href="docs-update.html"><code>docs-update</code></a> — sweep the configured Slack channel for documentation gaps.</li>
         <li><a href="pr-review.html"><code>pr-review</code></a> — review PRs against the project's documented conventions.</li>
         <li><a href="../configuration.html">Configuration</a> — what to put in <code>AGENTS.md</code>.</li>
