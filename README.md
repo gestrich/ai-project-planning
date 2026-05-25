@@ -10,9 +10,9 @@ From there, you chat about your project the way you would with a teammate — pa
 
 Discovery of those sources is driven by your project's `AGENTS.md` — written in whatever shape makes sense. See [Configuration](#configuration) for the details.
 
-## Installation
+## Claude Code
 
-### Claude Code
+### Install
 
 1. Add the marketplace:
    ```bash
@@ -27,12 +27,25 @@ Discovery of those sources is driven by your project's `AGENTS.md` — written i
 
 3. Restart Claude Code if necessary.
 
-**Uninstall:**
+### Local install
+
+For development against a local checkout (instead of the published marketplace), point Claude Code at the plugin directory directly:
+
+```bash
+claude --plugin-dir ~/path/to/ai-project-planning/plugin
+```
+
+`--plugin-dir` points at the directory that holds `.claude-plugin/plugin.json` — that's `./plugin` inside this repo, not the repo root.
+
+### Uninstall
+
 ```bash
 claude plugin uninstall project-planning@gestrich-project-planning --scope user
 ```
 
-### OpenAI Codex
+## OpenAI Codex
+
+### Install
 
 1. Add the marketplace:
    ```bash
@@ -48,7 +61,10 @@ claude plugin uninstall project-planning@gestrich-project-planning --scope user
    enabled = true   # set to false to disable without uninstalling
    ```
 
-**Uninstall:** Remove the `[plugins."project-planning"]` entry from `~/.codex/config.toml` and run:
+### Uninstall
+
+Remove the `[plugins."project-planning"]` entry from `~/.codex/config.toml` and run:
+
 ```bash
 codex plugin marketplace remove gestrich-project-planning
 ```
