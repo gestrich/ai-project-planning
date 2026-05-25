@@ -53,23 +53,15 @@ claude plugin uninstall project-planning@gestrich-project-planning --scope user
 codex plugin marketplace remove gestrich-project-planning
 ```
 
-### Local Testing (Claude Code)
-
-```bash
-claude --plugin-dir ~/path/to/ai-project-planning/plugin
-```
-
-`--plugin-dir` points at the directory that holds `.claude-plugin/plugin.json` — that's `./plugin` inside this repo, not the repo root.
-
 ## Skills
 
-Skills trigger from natural-language prompts. You don't need to name the skill — the descriptions are tuned to fire on the kinds of phrases you'd actually say.
+Invoke a skill with `/<skill-name> <your prompt>`.
 
-| Skill | Example trigger | What it does |
-|-------|-----------------|--------------|
-| `bootstrap` | "bootstrap this project", "set up project planning here" | Surveys an existing project, proposes a plan-of-changes (folders, file moves, `AGENTS.md` content), applies it after confirmation. |
-| `plans` | "here's my brain dump" / "what's the plan?" / "what should I do this week?" / "what's drifted?" | One skill, four modes. **Capture** writes raw transcripts to `notes/YYYY-MM-DD-<slug>.md`. **Status** synthesizes what's in motion across the configured sources. **Sprint** acts as a scrum-master coach and drafts a sprint file at `sprints/YYYY-MM-DD.md`. **Reconciliation** compares local `plans/` against Jira/Confluence and reports drift, graduation candidates, and stale items. |
-| `docs-update` | "update the docs", "what's missing from the docs?", "are our docs in sync with the code?" | Analyzes recent project activity (team discussion, code-repo PRs, etc.) against the project's documentation and proposes updates. Follows whatever update workflow `AGENTS.md` describes. |
+| Skill | Example invocations | What it does |
+|-------|---------------------|--------------|
+| `bootstrap` | `/bootstrap set this project up for the planning plugin`<br>`/bootstrap refresh — I added a new Slack channel` | Surveys an existing project, proposes a plan-of-changes (folders, file moves, `AGENTS.md` content), applies it after confirmation. |
+| `plans` | `/plans here's my brain dump`<br>`/plans what's the plan?`<br>`/plans what should I focus on this week?`<br>`/plans what's drifted from Jira?` | One skill, four modes. **Capture** writes raw transcripts to `notes/YYYY-MM-DD-<slug>.md`. **Status** synthesizes what's in motion across the configured sources. **Sprint** acts as a scrum-master coach and drafts a sprint file at `sprints/YYYY-MM-DD.md`. **Reconciliation** compares local `plans/` against Jira/Confluence and reports drift, graduation candidates, and stale items. |
+| `docs-update` | `/docs-update what's missing from the docs?`<br>`/docs-update are our docs in sync with the code?`<br>`/docs-update any doc gaps from recent PRs?` | Analyzes recent project activity (team discussion, code-repo PRs, etc.) against the project's documentation and proposes updates. Follows whatever update workflow `AGENTS.md` describes. |
 
 ## Configuration
 

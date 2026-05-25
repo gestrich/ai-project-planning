@@ -32,14 +32,12 @@
         <li><a href="https://github.com/gestrich/ai-project-planning#claude-code">Install on Claude Code</a></li>
         <li><a href="https://github.com/gestrich/ai-project-planning#openai-codex">Install on OpenAI Codex</a></li>
       </ul>
-      <p>If you'd rather not install yet, you can point Claude Code at a local checkout:</p>
-<pre><code>claude --plugin-dir ~/path/to/ai-project-planning/plugin</code></pre>
     </section>
 
     <section>
       <h2>2. Bootstrap an existing project</h2>
-      <p>Open a Claude/Codex session inside the project you want to onboard, then say:</p>
-<pre><code>bootstrap this project for project planning</code></pre>
+      <p>Open a Claude/Codex session inside the project you want to onboard:</p>
+<pre><code>/bootstrap set this project up for the planning plugin</code></pre>
       <p>The <a href="skills/bootstrap.html"><code>bootstrap</code></a> skill runs in three phases:</p>
       <ol>
         <li><strong>Survey.</strong> Reads <code>AGENTS.md</code>, scans for existing notes/plans folders, peeks at commit history for hints of Jira/Confluence/Slack usage, and lists the project's GitHub remote. Read-only.</li>
@@ -51,34 +49,37 @@
 
     <section>
       <h2>3. Capture a brain dump</h2>
-      <p>Paste a transcript or brain dump into the conversation:</p>
-<pre><code>here's my brain dump — yeah so I was thinking about the auth migration, we need to figure out
-whether to do the rollout in one shot or stage it, and there's that Jira ticket about the
-session token storage that I haven't read yet...</code></pre>
+      <p>Paste a transcript or brain dump:</p>
+<pre><code>/plans here's my brain dump
+yeah so I was thinking about the auth migration, we need to figure out
+whether to do the rollout in one shot or stage it, and there's that Jira
+ticket about the session token storage that I haven't read yet...</code></pre>
       <p>The <a href="skills/plans.html"><code>plans</code></a> skill's capture mode writes it verbatim to <code>notes/YYYY-MM-DD-&lt;slug&gt;.md</code> and confirms the path. No cleanup, no rewriting.</p>
     </section>
 
     <section>
       <h2>4. Ask what the plan is</h2>
-<pre><code>what's the plan?</code></pre>
+<pre><code>/plans what's the plan?</code></pre>
       <p>The <a href="skills/plans.html"><code>plans</code></a> skill's status mode reads your <code>AGENTS.md</code>, loads only the reference documents matching the sources you declared (Jira, Confluence, local <code>plans/</code>, Slack-as-context), and synthesizes a short, source-cited view of the project's direction.</p>
     </section>
 
     <section>
       <h2>5. Plan the week</h2>
-<pre><code>what should I focus on this week?</code></pre>
+<pre><code>/plans what should I focus on this week?</code></pre>
       <p>The <a href="skills/plans.html"><code>plans</code></a> skill's sprint mode gathers recent notes, reads the plan sources, looks at the previous sprint file (if any), and pulls a week of Slack activity from the configured channel. It then acts as a scrum-master coach — asks the questions that need answering before drafting a sprint file at <code>sprints/YYYY-MM-DD.md</code>. The draft is shown inline; the file isn't written until you sign off.</p>
     </section>
 
     <section>
       <h2>6. Weekly hygiene</h2>
+<pre><code>/docs-update what's missing from the docs?
+/docs-update any doc gaps from PRs merged this sprint?</code></pre>
       <p><a href="skills/docs-update.html"><code>docs-update</code></a> analyzes recent project activity — team discussion, merged PRs in the configured repos, anything else <code>AGENTS.md</code> flags — and proposes documentation updates. It handles both high-level project docs (Confluence, a wiki, in-repo docs) and repo-associated technical docs that often drift behind the code. It's read-only until you confirm; the action it takes follows whatever update workflow you've described in <code>AGENTS.md</code>.</p>
     </section>
 
     <section>
       <h2>7. Reconciliation</h2>
-      <p>When the local <code>plans/</code> folder and external sources start to drift, ask:</p>
-<pre><code>sync plans — what's drifted, what should graduate, what's stale?</code></pre>
+      <p>When the local <code>plans/</code> folder and external sources start to drift:</p>
+<pre><code>/plans sync plans — what's drifted, what should graduate, what's stale?</code></pre>
       <p>The <a href="skills/plans.html"><code>plans</code></a> skill's reconciliation mode compares local <code>plans/</code> against Jira/Confluence and groups the findings by graduation candidates, drift, and stale items. Each acted-on item is its own confirmation; a single "apply everything" is too coarse for hygiene work that spans multiple sources.</p>
     </section>
   </article>

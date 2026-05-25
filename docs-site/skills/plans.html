@@ -30,19 +30,24 @@
 
       <h3>Capture a brain dump</h3>
       <p>Paste a transcript or first-person rambling — voice notes, Apple Notes, anything in that shape — and it lands as a dated markdown file in <code>notes/</code> verbatim. No cleanup, no rewriting, no summarization. The raw form is the artifact, so later you can ask the skill to extract action items, decisions, or sprint candidates from it.</p>
-      <p>Try: <em>"here's my brain dump"</em>, <em>"voice transcript"</em>, or just paste the text.</p>
+<pre><code>/plans here's my brain dump from this morning
+[paste transcript]</code></pre>
 
       <h3>Ask what's in motion</h3>
       <p>Synthesizes the current state of your project across whichever sources you use — Jira issues, Confluence pages, the local <code>plans/</code> folder, recent Slack discussion. The answer is source-cited (Jira issue keys, Confluence page links, file paths, Slack permalinks), grouped by area not by source, with asks aimed at you up top. Short and oriented for decision-making — not a status report.</p>
-      <p>Try: <em>"what's the plan?"</em>, <em>"catch me up"</em>, <em>"where are we on X?"</em>, <em>"what's next?"</em></p>
+<pre><code>/plans what's the plan?
+/plans where are we on the auth migration?
+/plans catch me up</code></pre>
 
       <h3>Plan the week</h3>
       <p>Acts as a scrum-master coach. Gathers context from recent notes, your planning sources, the previous sprint file, and the configured Slack channel — then asks challenging questions about what's load-bearing before drafting a sprint file. The draft is shown inline; the file isn't written until you sign off.</p>
-      <p>Try: <em>"what should I do next?"</em>, <em>"plan my sprint"</em>, <em>"what's on deck this week?"</em></p>
+<pre><code>/plans what should I focus on this week?
+/plans plan my sprint</code></pre>
 
       <h3>Reconcile drift</h3>
       <p>A hygiene pass. Compares your local <code>plans/</code> folder against external sources of truth (Jira, Confluence) and reports three things: <strong>graduation candidates</strong> (firm enough that they should live externally now), <strong>drift</strong> (local and external disagree about the same item), and <strong>stale local items</strong> (overtaken by external decisions). Surfaces drift; never silently resolves it.</p>
-      <p>Try: <em>"sync plans"</em>, <em>"what's drifted?"</em>, <em>"what should graduate?"</em>, <em>"is the local plan still aligned with Jira?"</em></p>
+<pre><code>/plans sync plans — what's drifted, what should graduate, what's stale?
+/plans is the local plan still aligned with Jira?</code></pre>
     </section>
 
     <section>

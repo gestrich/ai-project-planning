@@ -43,7 +43,10 @@
         <li>Analyzes them together and proposes updates: clarifications, missing answers, recurring questions that deserve a permanent home, decisions made in chat that the docs don't yet reflect, technical details that no longer match the code.</li>
         <li>Hands off the action however <code>AGENTS.md</code> says updates happen. Always with your confirmation.</li>
       </ol>
-      <p>Try: <em>"update the docs"</em>, <em>"what's missing from the docs?"</em>, <em>"review last week's discussion for doc updates"</em>, <em>"are our docs in sync with the code?"</em>, <em>"any doc gaps from recent PRs?"</em></p>
+<pre><code>/docs-update what's missing from the docs?
+/docs-update review last week's discussion for doc updates
+/docs-update are our docs in sync with the code?
+/docs-update any doc gaps from recent PRs?</code></pre>
     </section>
 
     <section>
@@ -83,13 +86,11 @@
 
     <section>
       <h2>When to reach for it</h2>
-      <ul>
-        <li>"update the docs", "what's missing from the docs"</li>
-        <li>"review last week's discussion for doc updates"</li>
-        <li>"are our docs in sync with the code", "any doc gaps from recent PRs"</li>
-        <li>A recurring weekly check on whether the documented state still matches reality.</li>
-      </ul>
-      <p>If you're asking a <em>one-shot</em> question that just happens to need docs context ("what does the spec say about X"), that's <a href="plans.html"><code>plans</code></a> in status mode. <code>docs-update</code> is the sweep — activity in, doc proposals out.</p>
+      <p>A weekly hygiene pass, or any time you suspect the docs have drifted behind what's actually happening.</p>
+<pre><code>/docs-update what should be in the docs that isn't?
+/docs-update sweep the last two weeks
+/docs-update any doc gaps from PRs merged this sprint?</code></pre>
+      <p>If you're asking a <em>one-shot</em> question that just happens to need docs context (<code>/plans what does the spec say about X?</code>), that's the <a href="plans.html"><code>plans</code></a> skill in status mode. <code>docs-update</code> is the sweep — activity in, doc proposals out.</p>
     </section>
 
     <section>
