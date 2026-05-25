@@ -61,17 +61,17 @@
         <li>"bootstrap this project", "bootstrap the project for planning"</li>
         <li>"set up project planning here", "wire this repo up to the planning skills"</li>
         <li>"make this project work with the planning plugin"</li>
-        <li>"onboard this repo", "get this project ready for <code>plan</code>/<code>sprint</code>"</li>
+        <li>"onboard this repo", "get this project ready for planning"</li>
         <li>Landing in a fresh repo and asking what you need to add so the other skills will work.</li>
       </ul>
       <p>If the project has already been bootstrapped, the skill still triggers — but as a <em>refresh</em>. It surfaces what's there, proposes deltas (e.g., a Slack channel you've started using but haven't declared), and avoids duplicating sections.</p>
     </section>
 
     <section>
-      <h2>The <code>AGENTS.md</code> section it produces</h2>
-      <p>See the full shape in <a href="../configuration.html">Configuration</a>. Two things matter most about that section:</p>
+      <h2>The planning content it produces in <code>AGENTS.md</code></h2>
+      <p>See the full shape in <a href="../configuration.html">Configuration</a>. Free-form markdown — the skill picks a heading that fits your existing <code>AGENTS.md</code>, doesn't force a particular section name. Two things matter most:</p>
       <ul>
-        <li><strong>It enumerates which planning sources apply</strong>, so <a href="plan.html"><code>plan</code></a> knows which reference documents to load.</li>
+        <li><strong>It enumerates which planning sources apply</strong>, so <a href="planning.html"><code>planning</code></a> knows which reference documents to load.</li>
         <li><strong>It lists the plugin skills the project uses</strong>, each with a one-line note on what it's for and when to reach for it. This gives any future session immediate orientation without needing to read each <code>SKILL.md</code> upfront.</li>
       </ul>
     </section>
@@ -80,7 +80,7 @@
       <h2>What this skill does <em>not</em> do</h2>
       <ul>
         <li>It does not write to external systems. No Jira project creation, no Confluence page creation, no Slack channel setup — only writes to the local repo.</li>
-        <li>It does not run other skills as part of bootstrap. After applying the plan, you invoke <a href="notes.html"><code>notes</code></a>, <a href="plan.html"><code>plan</code></a>, etc. yourself.</li>
+        <li>It does not run other skills as part of bootstrap. After applying the plan, you invoke <a href="planning.html"><code>planning</code></a>, <a href="docs-update.html"><code>docs-update</code></a>, etc. yourself.</li>
         <li>It does not enforce a folder layout beyond the conventions named in the plugin. If a project already uses a different layout and wants to keep it, the skill proposes declaring that in <code>AGENTS.md</code> instead of moving files.</li>
         <li>It does not silently edit. Every change goes through the proposed plan and explicit confirmation.</li>
       </ul>

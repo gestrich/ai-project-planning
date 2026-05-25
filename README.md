@@ -1,6 +1,8 @@
 # Project Planning
 
-A plugin for Claude Code and OpenAI Codex that gives you a consistent gateway into any project for capturing notes, navigating plans, running sprints, syncing with external sources of truth (Jira / Confluence / Slack), and reviewing PRs against documentation. Drop the plugin into a new project, declare a small project-planning section in the project's `AGENTS.md`, and the skills figure out which sources apply and read only what's relevant.
+A plugin for Claude Code and OpenAI Codex that helps you manage a project — capture brain dumps as notes, see what's in motion across Jira / Confluence / Slack / a local `plans/` folder, plan the week, reconcile local plans against external sources, and review PRs against the project's documented conventions.
+
+The skills read your `AGENTS.md` to discover which planning sources your project uses (Jira, Confluence, a local `plans/` folder, Slack-as-context, GitHub repos, or some combination). You write it in whatever shape makes sense for the project — there's no required heading and no enforced schema — and the skills parse it like a teammate would.
 
 ## Installation
 
@@ -59,21 +61,23 @@ Skills trigger from natural-language prompts. You don't need to name the skill �
 
 | Skill | Example trigger | What it does |
 |-------|-----------------|--------------|
-| `notes` | "here's my brain dump" / pasting a long transcript | Writes the transcript verbatim to `notes/YYYY-MM-DD-<slug>.md`. No cleanup, no rewriting. |
-| `plan` | "what's the plan?", "what's next?", "catch me up" | Reads `AGENTS.md` to find which sources apply (Jira, Confluence, local `plans/`, Slack-as-context), loads only matching reference docs, synthesizes a brief view. |
-| `plan` (reconciliation mode) | "sync plans", "what's drifted?", "what should graduate?" | Same skill, different mode — compares local `plans/` against external sources and reports graduation candidates, drift, and stale items. |
-| `sprint` | "what should I do next?", "plan my sprint", "what's on deck?" | Acts as a scrum-master coach: gathers context, asks challenging questions, drafts a sprint file at `plans/sprints/YYYY-MM-DD.md` after confirmation. |
-| `bootstrap` | "bootstrap this project", "set up project planning here" | Surveys an existing project, proposes a plan-of-changes (folders, file moves, `AGENTS.md` section), applies it after confirmation. |
+| `planning` | "here's my brain dump" / "what's the plan?" / "what should I do this week?" / "what's drifted?" | One skill, four modes. **Capture** writes raw transcripts to `notes/YYYY-MM-DD-<slug>.md`. **Status** synthesizes what's in motion across the configured sources. **Sprint** acts as a scrum-master coach and drafts a sprint file at `plans/sprints/YYYY-MM-DD.md`. **Reconciliation** compares local `plans/` against Jira/Confluence and reports drift, graduation candidates, and stale items. |
+| `bootstrap` | "bootstrap this project", "set up project planning here" | Surveys an existing project, proposes a plan-of-changes (folders, file moves, `AGENTS.md` content), applies it after confirmation. |
 | `docs-update` | "update the docs", "what's missing from the docs?" | Sweeps the configured Slack channel for the last week, cross-references the docs, proposes updates. Stages a write or drafts a message to the owning team. |
 | `pr-review` | "review this PR", "is this PR aligned with our docs?" | Fetches the PR diff, cross-references the project's documented conventions, produces both PR-side findings and doc-update suggestions. |
 
-All skills are read-by-default. Any external write (Jira transition, Confluence edit, Slack send, PR comment, local file change) requires explicit confirmation.
-
 ## Configuration
 
-A project opts into this plugin by adding a `## Project Planning` section to its `AGENTS.md`. Free-form markdown — there's no enforced schema. The skills read it in natural language.
+The skills read your project's `AGENTS.md` and look for planning-relevant information in whatever shape you've written it. No required heading, no enforced schema — put the content under whatever heading fits your file. Skills look for these signals:
 
-A minimal example:
+- A Jira project key, epic ID, or board URL.
+- A Confluence space, page ID, or page URL.
+- A Slack channel name or ID flagged as project context.
+- A local `plans/` folder declared as a source.
+- A list of GitHub repos belonging to the project.
+- A list of which plugin skills the project uses, ideally with a one-line "what it's for / when to use it" per skill.
+
+An illustrative shape (use it as a starting point, not a template to follow exactly):
 
 ```markdown
 ## Project Planning
@@ -87,22 +91,18 @@ A minimal example:
 - `acme-org/example-web` — web client
 
 **Plugin skills enabled:**
-- `notes` — dump raw voice transcripts into `notes/`. Use when I paste a brain-dump.
-- `plan` — show the current direction. Use when I ask "what's the plan" or "what's next".
-- `sprint` — plan the week. Use when I ask "what should I do this week".
+- `planning` — capture brain dumps, show what's in motion, plan the week, reconcile drift. Use when I paste a transcript, ask "what's the plan", "what should I do this week", or "what's drifted".
 - `pr-review` — review PRs against the documented conventions. Use when I paste a PR URL.
 
 **Project-specific notes:** The web client mirrors the backend's REST contract; PR reviews should check both sides when an endpoint changes.
 ```
 
-The skills don't validate this section — they read it like a teammate would. Add what's useful; leave out what isn't.
-
 Folder layout lives in the project, not the plugin:
 
 ```
 your-project/
-├── AGENTS.md            # contains the section above
-├── notes/               # raw transcripts (created by `notes`)
+├── AGENTS.md            # planning content lives somewhere in here
+├── notes/               # raw transcripts (created by capture mode)
 └── plans/               # local planning artifacts
     ├── plan.md          # manifest pointing at the other plan files
     └── sprints/         # one file per sprint, dated by start-of-week

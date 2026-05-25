@@ -18,7 +18,7 @@ Fire on any phrasing that asks for documentation hygiene driven by recent discus
 - "what should we have written down", "anything to land in Confluence from Slack"
 - A recurring weekly check on whether the documented state still matches reality.
 
-If the user is asking a *one-shot* question that just happens to need docs context (e.g., "what does the spec say about X"), that's the `plan` skill, not this one. `docs-update` is specifically the sweep — discussion in, doc proposals out.
+If the user is asking a *one-shot* question that just happens to need docs context (e.g., "what does the spec say about X"), that's the `planning` skill in status mode, not this one. `docs-update` is specifically the sweep — discussion in, doc proposals out.
 
 ## Behavior
 
@@ -27,8 +27,8 @@ The skill runs in three phases: **gather → propose → stage**. The gather and
 ### 1. Gather
 
 - **Resolve the time window.** Default to the last seven days. Use `date +%Y-%m-%d` to anchor the window; never guess. If the user names a different window ("last two weeks", "since the offsite"), honor it.
-- **Read the Slack channel** named in the project's `AGENTS.md` Project Planning section, read-only. Follow the patterns in `plan/slack.md` — load Slack MCP schemas via `ToolSearch`, read the channel, pull load-bearing threads, resolve user IDs to names, capture permalinks. Don't redefine those patterns here.
-- **Read the documentation source.** When `AGENTS.md` declares Confluence, follow `plan/confluence.md` — resolve the root page from `AGENTS.md`, walk descendants when the discussion implicates a specific sub-area, fetch with `contentFormat: "markdown"` for inspection. When `AGENTS.md` declares a local docs source (e.g., a `docs/` folder), read those files directly. Do not skip this step — proposing doc updates without re-reading what the docs currently say is how you propose duplicates and contradictions.
+- **Read the Slack channel** named in the project's `AGENTS.md`, read-only. Follow the patterns in `planning/slack.md` — load Slack MCP schemas via `ToolSearch`, read the channel, pull load-bearing threads, resolve user IDs to names, capture permalinks. Don't redefine those patterns here.
+- **Read the documentation source.** When `AGENTS.md` declares Confluence, follow `planning/confluence.md` — resolve the root page from `AGENTS.md`, walk descendants when the discussion implicates a specific sub-area, fetch with `contentFormat: "markdown"` for inspection. When `AGENTS.md` declares a local docs source (e.g., a `docs/` folder), read those files directly. Do not skip this step — proposing doc updates without re-reading what the docs currently say is how you propose duplicates and contradictions.
 - Keep this phase quiet — the user sees the proposals, not the raw read output, unless they ask.
 
 ### 2. Propose
@@ -53,13 +53,13 @@ Drop noise. A one-off question that got a one-off answer and nobody asked again 
 
 Only after the user picks one or more proposals to act on.
 
-- **When the project owns the doc** (`AGENTS.md` declares Confluence direct-write access, or the docs live in this repo): offer to stage the edit. For Confluence, follow `plan/confluence.md`'s read-before-write discipline strictly — read the live page with `contentFormat: "html"`, capture the version number, compose the update as a delta, surface unexpected content before proceeding, write back with the version for optimistic concurrency. For in-repo docs, show the proposed diff inline and wait for confirmation before writing.
+- **When the project owns the doc** (`AGENTS.md` declares Confluence direct-write access, or the docs live in this repo): offer to stage the edit. For Confluence, follow `planning/confluence.md`'s read-before-write discipline strictly — read the live page with `contentFormat: "html"`, capture the version number, compose the update as a delta, surface unexpected content before proceeding, write back with the version for optimistic concurrency. For in-repo docs, show the proposed diff inline and wait for confirmation before writing.
 - **When another team owns the doc**: draft a short message to send to that team — what's changed, the Slack permalink for context, a concrete suggested edit. Do not post the message from this skill. Hand it to the user (or to a Slack-posting skill they invoke separately) for the actual send.
 - Always wait for explicit confirmation before any write or any message send. The proposal list is not the confirmation.
 
 ## Mapping the project's `AGENTS.md` declarations onto this skill
 
-The Project Planning section of `AGENTS.md` should give you:
+`AGENTS.md` should give you:
 
 - A **Slack channel** to sweep (name + id). Without one, this skill has nothing to read; tell the user and stop.
 - A **documentation source** — Confluence space + root page id, or a local docs folder path. Without one, the skill can still report what came out of Slack, but framed as "things the team is talking about that don't appear to be written down anywhere", with no specific target proposed.
@@ -71,11 +71,11 @@ If a required piece is missing, ask the user once and offer to run `bootstrap` (
 
 - It does not post to Slack. Drafting a message to another team is fine; sending it is not this skill's job.
 - It does not write to documentation without explicit confirmation. Read-before-write applies to every body-content mutation.
-- It does not summarize the channel for catch-up purposes. That's the `plan` skill in Slack-as-context mode. `docs-update` is specifically about extracting *documentation-shaped* gaps from the channel.
-- It does not modify local `notes/` or `plans/`. Those are owned by `notes`, `plan`, and `sprint` respectively.
+- It does not summarize the channel for catch-up purposes. That's the `planning` skill in status mode (with Slack as a context source). `docs-update` is specifically about extracting *documentation-shaped* gaps from the channel.
+- It does not modify local `notes/` or `plans/`. Those are owned by the `planning` skill.
 
 ## Relationship to other skills
 
-- Reads use the same patterns as `plan/slack.md` and `plan/confluence.md`. If those patterns need to change, change them once in the reference docs — don't duplicate here.
+- Reads use the same patterns as `planning/slack.md` and `planning/confluence.md`. If those patterns need to change, change them once in the reference docs — don't duplicate here.
 - `pr-review` (next skill in the plugin) shares the "propose doc updates" output shape. The two skills can run alongside each other in a weekly cadence: PRs in, docs swept, doc gaps proposed once from both sides.
 - `bootstrap` is the right answer when `AGENTS.md` is missing the channel or docs declaration this skill needs.

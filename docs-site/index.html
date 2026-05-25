@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Project Planning — a Claude/Codex plugin</title>
-<meta name="description" content="A Claude Code and OpenAI Codex plugin for capturing notes, navigating plans, running sprints, syncing with Jira/Confluence/Slack, and reviewing PRs against project documentation.">
+<meta name="description" content="A Claude Code and OpenAI Codex plugin that helps you manage a project: capture brain dumps, see what's in motion across Jira/Confluence/Slack/local plans, plan the week, reconcile drift, and review PRs against documented conventions.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -22,12 +22,11 @@
 <main>
   <article>
     <h1>Project Planning</h1>
-    <p class="lede">A plugin for Claude Code and OpenAI Codex that gives you a consistent gateway into any project — capture notes, navigate plans, plan sprints, sync with external sources of truth, and review PRs against your own documentation.</p>
+    <p class="lede">A plugin for Claude Code and OpenAI Codex that helps you manage a project — capture brain dumps as notes, see what's in motion across Jira / Confluence / Slack / a local <code>plans/</code> folder, plan the week, reconcile local plans against external sources, and review PRs against your project's documented conventions.</p>
 
     <section>
-      <h2>What it is</h2>
-      <p>Project Planning is a project-agnostic plugin. Drop it into a new project, declare a short <code>## Project Planning</code> section in the project's <code>AGENTS.md</code>, and the skills figure out which sources apply (Jira, Confluence, a local <code>plans/</code> folder, Slack-as-context, or some combination) and read only what's relevant.</p>
-      <p>Every skill is read-by-default. Any external write — a Jira transition, a Confluence edit, a Slack send, a PR comment, a local file change — only happens after you explicitly confirm it. The skills surface decisions; they don't make them.</p>
+      <h2>How it works</h2>
+      <p>The skills read your project's <code>AGENTS.md</code> to discover which planning sources you use. You write that content in whatever shape makes sense for the project — there's no required heading and no enforced schema — and the skills parse it like a teammate would, picking up Jira project keys, Confluence pages, Slack channels, GitHub repos, and a local <code>plans/</code> folder as they appear.</p>
     </section>
 
     <section>
@@ -44,17 +43,9 @@
       <h2>Skills</h2>
       <p>Each skill is triggered by natural-language prompts — you don't need to name the skill. Pick one to read more.</p>
       <div class="cards">
-        <a class="card" href="skills/notes.html">
-          <h3>notes</h3>
-          <p>Capture raw voice transcripts and brain dumps verbatim into the project's <code>notes/</code> folder.</p>
-        </a>
-        <a class="card" href="skills/plan.html">
-          <h3>plan</h3>
-          <p>Synthesize what's in motion across the project's planning sources — and reconcile local plans against external sources of truth.</p>
-        </a>
-        <a class="card" href="skills/sprint.html">
-          <h3>sprint</h3>
-          <p>Coach you through picking what to do this week, then draft a sprint file once you sign off.</p>
+        <a class="card" href="skills/planning.html">
+          <h3>planning</h3>
+          <p>One skill, four modes: capture brain dumps into <code>notes/</code>, show what's in motion, plan the week, and reconcile local plans against Jira/Confluence.</p>
         </a>
         <a class="card" href="skills/bootstrap.html">
           <h3>bootstrap</h3>
