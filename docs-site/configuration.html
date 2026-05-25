@@ -66,12 +66,15 @@ This project uses the [project-planning plugin](https://github.com/gestrich/ai-p
 
 - `plans` — capture brain dumps, show what's in motion, plan the week, reconcile drift. Use when I paste a transcript, ask "what's the plan", "what should I do this week", or "what's drifted".
 - `bootstrap` — re-run if the planning shape changes.
-- `docs-update` — sweep last week of the Slack channel for things that should land in Confluence. Use weekly.
-- `pr-review` — review PRs against the docs declared above. Use when I paste a PR URL.
+- `docs-update` — sweep last week of the Slack channel and recent PRs in the repos above for things that should land in the docs. Use weekly.
+
+### How docs get updated
+
+I have direct edit access to Confluence pages under space `EX`. The in-repo `docs/` folder in `example-service` is PR-reviewed — propose changes as a PR draft. The web-client API reference is owned by the platform team; flag updates by drafting an issue against `acme-org/docs-platform`.
 
 ### Project-specific notes
 
-The web client mirrors the backend's REST contract; PR reviews should check both sides when an endpoint changes.
+The web client mirrors the backend's REST contract; doc updates should check both sides when an endpoint changes.
 </code></pre>
     </section>
 
@@ -82,7 +85,10 @@ The web client mirrors the backend's REST contract; PR reviews should check both
       <p>Mark which source is authoritative for shipped work. When both <code>plans/</code> and an external system are listed, the plugin treats the external system as the source of truth and <code>plans/</code> as supplementary unless told otherwise.</p>
 
       <h3>GitHub repos</h3>
-      <p>Used by <a href="skills/pr-review.html"><code>pr-review</code></a> to know which repos belong to the project. List them in <code>owner/repo</code> form. The first repo is usually the one the project is checked out as.</p>
+      <p>Lists which repos belong to the project. <a href="skills/docs-update.html"><code>docs-update</code></a> can scan recent PRs in these repos for technical-doc drift. List them in <code>owner/repo</code> form. The first repo is usually the one the project is checked out as.</p>
+
+      <h3>How docs get updated</h3>
+      <p>Free-form prose describing the update workflow for each kind of doc in the project. Projects do this in wildly different ways — direct Confluence edits, PR-reviewed in-repo folders, issues against another team's repo, requests to a docs team. <a href="skills/docs-update.html"><code>docs-update</code></a> reads this and follows whatever workflow you've described rather than baking in a default.</p>
 
       <h3>Plugin skills enabled</h3>
       <p>The most important subsection. Enumerate each plugin skill the project uses, with a one-line <strong>what it's for / when to reach for it</strong> note. This gives any future session immediate orientation without needing to read each <code>SKILL.md</code> upfront, and lets skills check the list before firing on ambiguous triggers.</p>

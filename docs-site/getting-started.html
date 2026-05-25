@@ -72,12 +72,7 @@ session token storage that I haven't read yet...</code></pre>
 
     <section>
       <h2>6. Weekly hygiene</h2>
-      <p>Two skills compose into a weekly cadence:</p>
-      <ul>
-        <li><a href="skills/docs-update.html"><code>docs-update</code></a> sweeps the configured Slack channel for the last week and proposes documentation updates against Confluence (or your local docs folder).</li>
-        <li><a href="skills/pr-review.html"><code>pr-review</code></a> reviews an open PR against the project's documented conventions and surfaces both PR-side findings and doc-update suggestions in one pass.</li>
-      </ul>
-      <p>Both skills are read-only by default. Anything they want to write — a Confluence page edit, a PR comment, a message to another team — waits for your explicit confirmation.</p>
+      <p><a href="skills/docs-update.html"><code>docs-update</code></a> analyzes recent project activity — team discussion, merged PRs in the configured repos, anything else <code>AGENTS.md</code> flags — and proposes documentation updates. It handles both high-level project docs (Confluence, a wiki, in-repo docs) and repo-associated technical docs that often drift behind the code. It's read-only until you confirm; the action it takes follows whatever update workflow you've described in <code>AGENTS.md</code>.</p>
     </section>
 
     <section>

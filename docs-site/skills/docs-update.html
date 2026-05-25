@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>docs-update — Project Planning</title>
-<meta name="description" content="The docs-update skill analyzes recent team discussion against your project's documentation and proposes updates you can act on.">
+<meta name="description" content="The docs-update skill analyzes recent project activity (team discussion and code-repo PRs) against the project's documentation and proposes updates you can act on.">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -23,50 +23,61 @@
   <article>
     <span class="tag">Skill</span>
     <h1><code>docs-update</code></h1>
-    <p class="lede">Analyzes recent team discussion against the project's documentation and proposes updates you can act on. Reads where discussion happens and where the docs live from your <code>AGENTS.md</code>; follows whatever update workflow you've described there.</p>
+    <p class="lede">Analyzes recent project activity against the project's documentation and proposes updates you can act on. Reads what to scan, where docs live, and how updates happen from your <code>AGENTS.md</code> — and follows whatever workflow you've described.</p>
+
+    <section>
+      <h2>Why this skill exists</h2>
+      <p>A project usually has documentation in more than one shape:</p>
+      <ul>
+        <li><strong>Project docs</strong> — process, status, decisions, plans. The kind of thing that lives on a wiki or a Confluence space.</li>
+        <li><strong>Technical docs associated with code repositories</strong> — API references, architecture notes, conventions, runbooks. Often inside the repo itself; sometimes elsewhere.</li>
+      </ul>
+      <p>Both go stale. Decisions get made in chat and never written down. PRs change a public API but the docs that describe it don't move. Keeping these in sync with reality is a chore. This skill is the chore: scan recent activity, scan the current docs, and propose what to update.</p>
+    </section>
 
     <section>
       <h2>What it does</h2>
       <ol>
-        <li>Reads the discussion source declared in <code>AGENTS.md</code> over a recent window (default: last seven days).</li>
-        <li>Reads the current documentation source declared in <code>AGENTS.md</code>.</li>
-        <li>Analyzes the two together and proposes updates — clarifications, missing answers, recurring questions that deserve a permanent home, decisions made in chat that the docs don't yet reflect.</li>
-        <li>Hands off the action however <code>AGENTS.md</code> says updates happen in this project. Always with your confirmation.</li>
+        <li>Reads the activity sources declared in <code>AGENTS.md</code> over a recent window (default: last seven days). Activity can be team discussion (a Slack channel, etc.), merged PRs in associated code repos, or anything else the project considers signal for doc staleness.</li>
+        <li>Reads the documentation sources declared in <code>AGENTS.md</code> — both project docs and any repo-associated technical docs.</li>
+        <li>Analyzes them together and proposes updates: clarifications, missing answers, recurring questions that deserve a permanent home, decisions made in chat that the docs don't yet reflect, technical details that no longer match the code.</li>
+        <li>Hands off the action however <code>AGENTS.md</code> says updates happen. Always with your confirmation.</li>
       </ol>
-      <p>Try: <em>"update the docs"</em>, <em>"what's missing from the docs?"</em>, <em>"review last week's discussion for doc updates"</em>, <em>"what should we have written down?"</em></p>
+      <p>Try: <em>"update the docs"</em>, <em>"what's missing from the docs?"</em>, <em>"review last week's discussion for doc updates"</em>, <em>"are our docs in sync with the code?"</em>, <em>"any doc gaps from recent PRs?"</em></p>
     </section>
 
     <section>
       <h2>What it reads from <code>AGENTS.md</code></h2>
       <ul>
-        <li><strong>Where team discussion happens.</strong> Usually a Slack channel; could be Discord, GitHub Discussions, a mailing list, or anything else.</li>
-        <li><strong>Where the docs live.</strong> A Confluence space, an in-repo folder, a wiki, a Notion workspace, an S3 bucket — wherever the project keeps them.</li>
+        <li><strong>Activity sources to scan.</strong> Any combination: team discussion (Slack channel, Discord, GitHub Discussions); one or more code repositories whose recent PRs and commits are worth scanning for technical-doc drift; anything else the project considers signal.</li>
+        <li><strong>Documentation sources to compare against.</strong> Usually a mix — high-level project docs (Confluence, a wiki, Notion) and repo-associated technical docs (an in-repo <code>docs/</code> folder, a README, generated API references). <code>AGENTS.md</code> should say which docs cover what.</li>
         <li><strong>How docs get updated.</strong> Free-form prose. Projects do this in wildly different ways — direct edit access, a PR-reviewed in-repo folder, an issue against another team's repo, a request to a docs team. Whatever the workflow is, write it in <code>AGENTS.md</code> and the skill will follow it.</li>
       </ul>
-      <p>Without a named discussion source the skill has nothing to read. Without a named docs source it can still report what came out of discussion, but framed as "things the team is talking about that don't appear to be written down anywhere." Without a clear update workflow, the skill will ask before doing anything.</p>
+      <p>Without a named activity source the skill has nothing to scan. Without a named docs source it can still report what surfaced from activity, framed as "things showing up that don't appear to be written down anywhere." Without a clear update workflow, the skill will ask before doing anything.</p>
     </section>
 
     <section>
       <h2>What the proposals look like</h2>
       <p>Each proposed update carries:</p>
       <ul>
-        <li><strong>What the update is</strong> — a clarification, a missing answer, a recurring question, a decision needing a permanent home.</li>
+        <li><strong>What the update is</strong> — a clarification, a missing answer, a recurring question, a decision needing a permanent home, a technical detail that no longer matches the code.</li>
         <li><strong>Where it should land</strong> — the specific doc/page/section if known. If ambiguous, surfaced as a question.</li>
-        <li><strong>Why it's worth landing</strong> — the discussion signal that prompted it (link if available).</li>
+        <li><strong>Why it's worth landing</strong> — the signal that prompted it (a discussion link, a PR link, a commit).</li>
       </ul>
       <p>Common patterns the skill flags:</p>
       <ul>
-        <li>A question got asked more than once in different threads → the answer deserves a permanent home.</li>
+        <li>A question got asked more than once → the answer deserves a permanent home.</li>
         <li>A decision was made but the doc still describes the prior approach → the doc needs an update.</li>
         <li>A concept the team is using freely doesn't appear in the docs at all → it needs to be introduced.</li>
+        <li>A merged PR changed a public API, an architectural boundary, or a convention, and the technical docs still describe the old shape → the docs need to be brought current.</li>
         <li>The doc is correct but ambiguous enough that people keep asking the same clarifying question → tighten the wording.</li>
       </ul>
-      <p>One-off questions that got one-off answers don't count. The skill uses judgment about what's recurring vs. transient.</p>
+      <p>One-off questions, tiny PRs that didn't change documented behavior, and noise commits don't count. The skill uses judgment about what's recurring or load-bearing.</p>
     </section>
 
     <section>
       <h2>How the action happens</h2>
-      <p>The skill doesn't bake in an update workflow — your <code>AGENTS.md</code> describes one. Whatever it says, the skill follows. If you can edit the docs directly, it stages the edit using the right protocol for that source. If updates flow through another team or another process, it produces the artifact that workflow calls for (a message, an issue, a PR comment) and hands it to you to send.</p>
+      <p>The skill doesn't bake in an update workflow — your <code>AGENTS.md</code> describes one. Whatever it says, the skill follows. If you can edit the docs directly, it stages the edit using the right protocol for that source. If updates flow through another team or another process, it produces the artifact that workflow calls for (a message, an issue, a PR comment, a draft) and hands it to you.</p>
       <p>Each acted-on proposal is its own explicit ask. The proposal list is not the confirmation.</p>
     </section>
 
@@ -75,18 +86,17 @@
       <ul>
         <li>"update the docs", "what's missing from the docs"</li>
         <li>"review last week's discussion for doc updates"</li>
-        <li>"what should we have written down"</li>
+        <li>"are our docs in sync with the code", "any doc gaps from recent PRs"</li>
         <li>A recurring weekly check on whether the documented state still matches reality.</li>
       </ul>
-      <p>If you're asking a <em>one-shot</em> question that just happens to need docs context ("what does the spec say about X"), that's <a href="plans.html"><code>plans</code></a> in status mode. <code>docs-update</code> is the sweep — discussion in, doc proposals out.</p>
+      <p>If you're asking a <em>one-shot</em> question that just happens to need docs context ("what does the spec say about X"), that's <a href="plans.html"><code>plans</code></a> in status mode. <code>docs-update</code> is the sweep — activity in, doc proposals out.</p>
     </section>
 
     <section>
       <h2>See also</h2>
       <ul>
-        <li><a href="bootstrap.html"><code>bootstrap</code></a> — set up the discussion source, docs source, and update workflow in <code>AGENTS.md</code>.</li>
+        <li><a href="bootstrap.html"><code>bootstrap</code></a> — set up the activity sources, docs sources, and update workflow in <code>AGENTS.md</code>.</li>
         <li><a href="plans.html"><code>plans</code></a> — capture, plan, and reconcile project state.</li>
-        <li><a href="pr-review.html"><code>pr-review</code></a> — also produces doc-update suggestions, looking from PRs rather than discussion.</li>
       </ul>
     </section>
   </article>

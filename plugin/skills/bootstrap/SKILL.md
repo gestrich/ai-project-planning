@@ -5,7 +5,7 @@ description: Onboard an existing project to the project-planning plugin's conven
 
 # bootstrap
 
-The on-ramp for the project-planning plugin. Bootstrap looks at an existing project, figures out what's already there, and proposes the minimum set of changes needed to get it into a shape the rest of the plugin's skills (`plans`, `docs-update`, `pr-review`) can work with. It never edits silently — every change goes through an explicit plan-of-changes the user signs off on first.
+The on-ramp for the project-planning plugin. Bootstrap looks at an existing project, figures out what's already there, and proposes the minimum set of changes needed to get it into a shape the rest of the plugin's skills (`plans`, `docs-update`) can work with. Every change goes through an explicit plan-of-changes the user signs off on first.
 
 ## When to trigger
 
@@ -95,7 +95,6 @@ This project uses the [project-planning plugin](https://github.com/gestrich/ai-p
 - `plans` — capture transcripts into `notes/`, show what's in motion across Jira/Confluence/`plans/`, plan the week, and reconcile local plans against external sources. Use when I paste a brain-dump, ask "what's the plan", ask "what should I do this week", or ask what's drifted.
 - `bootstrap` — re-run if the planning shape changes (new Slack channel, new repo, etc.).
 - `docs-update` — sweep last week of `#team-channel` for things that should land in Confluence. Use weekly.
-- `pr-review` — review PRs against the docs declared above. Use when reviewing open PRs.
 ```
 
 Two things matter most about this content:
@@ -114,5 +113,5 @@ Omit subsections that don't apply (e.g., no Confluence → drop that bullet). Do
 
 ## Relationship to other skills
 
-- `bootstrap` is run once per project (and re-run as a refresh when the planning shape changes). The other skills (`plans`, `docs-update`, `pr-review`) are used continuously and rely on the planning content in `AGENTS.md` that `bootstrap` lands.
+- `bootstrap` is run once per project (and re-run as a refresh when the planning shape changes). The other skills (`plans`, `docs-update`) are used continuously and rely on the planning content in `AGENTS.md` that `bootstrap` lands.
 - If `plans` is invoked in a project with no planning content in `AGENTS.md`, it should suggest running `bootstrap` rather than guessing the planning shape from the repo contents.

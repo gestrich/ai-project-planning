@@ -1,7 +1,7 @@
 {
   "name": "project-planning",
   "version": "0.1.0",
-  "description": "A Claude/Codex plugin for project planning: capture notes, navigate plans, run sprints, sync with Jira/Confluence/Slack, and review PRs against documentation.",
+  "description": "A Claude/Codex plugin for project planning: capture notes, navigate plans, run sprints, sync with Jira/Confluence/Slack, and keep documentation in sync with recent activity.",
   "author": {
     "name": "Bill Gestrich",
     "url": "https://github.com/gestrich"
@@ -13,6 +13,6 @@
     "jira",
     "confluence",
     "slack",
-    "pr-review"
+    "documentation"
   ]
 }

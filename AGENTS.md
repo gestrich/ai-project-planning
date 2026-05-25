@@ -20,8 +20,7 @@ This repository is the source for the **project-planning** plugin — a Claude/C
 
 - **`plans`** — one skill, four modes (capture / status / sprint / reconciliation). Reference documents in `plugin/skills/plans/`: `notes.md`, `sprint.md`, `jira.md`, `confluence.md`, `slack.md`, `local.md`.
 - **`bootstrap`** — onboards an existing project (folders, file moves, `AGENTS.md` content). Single SKILL.md.
-- **`docs-update`** — sweeps a configured Slack channel and proposes documentation updates.
-- **`pr-review`** — reviews a GitHub PR against the project's documented conventions; outputs PR-side and docs-side findings.
+- **`docs-update`** — analyzes recent project activity (team discussion, code-repo PRs, etc.) against the project's documentation and proposes updates.
 
 ## Writing skills in this repo
 
@@ -48,7 +47,7 @@ A project that uses this plugin declares its setup in `AGENTS.md`. There's no re
 
 **Plugin skills enabled:**
 - `plans` — capture brain dumps, show what's in motion, plan the week, reconcile drift.
-- `pr-review` — review PRs against the documented conventions.
+- `docs-update` — sweep recent discussion and PRs for things the docs should reflect but don't.
 ```
 
 Free-form markdown. The skills read it in natural language; they don't validate it.

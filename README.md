@@ -1,6 +1,6 @@
 # Project Planning
 
-A plugin for Claude Code and OpenAI Codex that helps you manage a project — capture brain dumps, see what's in motion, plan the week, and review PRs against documented conventions.
+A plugin for Claude Code and OpenAI Codex that helps you manage a project — capture brain dumps, see what's in motion, plan the week, and keep your project's documentation in sync with what's actually happening.
 
 ## How it works
 
@@ -69,8 +69,7 @@ Skills trigger from natural-language prompts. You don't need to name the skill �
 |-------|-----------------|--------------|
 | `bootstrap` | "bootstrap this project", "set up project planning here" | Surveys an existing project, proposes a plan-of-changes (folders, file moves, `AGENTS.md` content), applies it after confirmation. |
 | `plans` | "here's my brain dump" / "what's the plan?" / "what should I do this week?" / "what's drifted?" | One skill, four modes. **Capture** writes raw transcripts to `notes/YYYY-MM-DD-<slug>.md`. **Status** synthesizes what's in motion across the configured sources. **Sprint** acts as a scrum-master coach and drafts a sprint file at `sprints/YYYY-MM-DD.md`. **Reconciliation** compares local `plans/` against Jira/Confluence and reports drift, graduation candidates, and stale items. |
-| `docs-update` | "update the docs", "what's missing from the docs?" | Sweeps the configured Slack channel for the last week, cross-references the docs, proposes updates. Stages a write or drafts a message to the owning team. |
-| `pr-review` | "review this PR", "is this PR aligned with our docs?" | Fetches the PR diff, cross-references the project's documented conventions, produces both PR-side findings and doc-update suggestions. |
+| `docs-update` | "update the docs", "what's missing from the docs?", "are our docs in sync with the code?" | Analyzes recent project activity (team discussion, code-repo PRs, etc.) against the project's documentation and proposes updates. Follows whatever update workflow `AGENTS.md` describes. |
 
 ## Configuration
 

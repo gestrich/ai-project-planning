@@ -26,7 +26,7 @@ The skill finds project configuration in whatever shape the user has written it.
 - A Confluence space key, page ID, or page URL → load [confluence.md](confluence.md).
 - A Slack channel name or ID flagged as project context → load [slack.md](slack.md).
 - A mention of `plans/` as a source, or no external system named → load [local.md](local.md).
-- A list of GitHub repos — relevant for downstream skills (`pr-review`), and useful when citing work-in-flight.
+- A list of GitHub repos — relevant for `docs-update` (which may scan recent PRs for technical-doc drift), and useful when citing work-in-flight.
 - A list of which plugin skills the project uses, possibly with one-line notes on what each is for — honor that list when deciding what's in scope.
 
 If `AGENTS.md` doesn't exist, or has no planning-relevant content, say so plainly and offer to run `bootstrap`. Don't guess the planning shape from the repo contents.
