@@ -69,8 +69,8 @@ Specific patterns:
 
 ## What `plans/` is *not*
 
-- **It is not for raw transcripts.** Those go in `notes/` via the `notes` skill. If the user pastes a transcript and asks to "save it to plans," redirect: it belongs in `notes/`, and `plans/` synthesizes from there.
-- **It is not for sprint files.** Sprints live under `plans/sprints/` and are owned by the `sprint` skill. The manifest can mention the sprint folder, but individual sprint files don't go in the top-level manifest.
+- **It is not for raw transcripts.** Those go in `notes/` via capture mode. If the user pastes a transcript and asks to "save it to plans," redirect: it belongs in `notes/`, and `plans/` synthesizes from there.
+- **It is not for sprint files.** Sprints live under the top-level `sprints/` folder (sibling of `plans/`) and are owned by sprint mode. The manifest can mention sprints, but individual sprint files don't go in `plans/`.
 - **It is not for everything in the repo that mentions planning.** A `ROADMAP.md` at the repo root is not `plans/`. Don't conflate them. If a project has both, surface this as something the user might want to reconcile during bootstrap.
 
 ## Mapping the project's `AGENTS.md` declarations onto local plans

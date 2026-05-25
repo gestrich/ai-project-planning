@@ -46,7 +46,7 @@
         <li><strong>Propose.</strong> Shows you a plan-of-changes — folders to create, files to move (via <code>git mv</code>), and the planning content it wants to add to <code>AGENTS.md</code> (under whatever heading fits the file you already have). You answer a few clarifying questions inline.</li>
         <li><strong>Apply.</strong> Only after you say "looks good" / "go ahead" / "apply", the skill makes the changes and summarizes what landed.</li>
       </ol>
-      <p>After bootstrap finishes, your project has a <code>notes/</code> folder, a <code>plans/</code> folder, a <code>plans/sprints/</code> folder, and planning content in <code>AGENTS.md</code>. See the <a href="configuration.html">Configuration</a> page for what that looks like.</p>
+      <p>After bootstrap finishes, your project has a <code>notes/</code> folder, a <code>plans/</code> folder, a <code>sprints/</code> folder, and planning content in <code>AGENTS.md</code>. See the <a href="configuration.html">Configuration</a> page for what that looks like.</p>
     </section>
 
     <section>
@@ -55,19 +55,19 @@
 <pre><code>here's my brain dump — yeah so I was thinking about the auth migration, we need to figure out
 whether to do the rollout in one shot or stage it, and there's that Jira ticket about the
 session token storage that I haven't read yet...</code></pre>
-      <p>The <a href="skills/planning.html"><code>planning</code></a> skill's capture mode writes it verbatim to <code>notes/YYYY-MM-DD-&lt;slug&gt;.md</code> and confirms the path. No cleanup, no rewriting.</p>
+      <p>The <a href="skills/plans.html"><code>plans</code></a> skill's capture mode writes it verbatim to <code>notes/YYYY-MM-DD-&lt;slug&gt;.md</code> and confirms the path. No cleanup, no rewriting.</p>
     </section>
 
     <section>
       <h2>4. Ask what the plan is</h2>
 <pre><code>what's the plan?</code></pre>
-      <p>The <a href="skills/planning.html"><code>planning</code></a> skill's status mode reads your <code>AGENTS.md</code>, loads only the reference documents matching the sources you declared (Jira, Confluence, local <code>plans/</code>, Slack-as-context), and synthesizes a short, source-cited view of the project's direction.</p>
+      <p>The <a href="skills/plans.html"><code>plans</code></a> skill's status mode reads your <code>AGENTS.md</code>, loads only the reference documents matching the sources you declared (Jira, Confluence, local <code>plans/</code>, Slack-as-context), and synthesizes a short, source-cited view of the project's direction.</p>
     </section>
 
     <section>
       <h2>5. Plan the week</h2>
 <pre><code>what should I focus on this week?</code></pre>
-      <p>The <a href="skills/planning.html"><code>planning</code></a> skill's sprint mode gathers recent notes, reads the plan sources, looks at the previous sprint file (if any), and pulls a week of Slack activity from the configured channel. It then acts as a scrum-master coach — asks the questions that need answering before drafting a sprint file at <code>plans/sprints/YYYY-MM-DD.md</code>. The draft is shown inline; the file isn't written until you sign off.</p>
+      <p>The <a href="skills/plans.html"><code>plans</code></a> skill's sprint mode gathers recent notes, reads the plan sources, looks at the previous sprint file (if any), and pulls a week of Slack activity from the configured channel. It then acts as a scrum-master coach — asks the questions that need answering before drafting a sprint file at <code>sprints/YYYY-MM-DD.md</code>. The draft is shown inline; the file isn't written until you sign off.</p>
     </section>
 
     <section>
@@ -84,7 +84,7 @@ session token storage that I haven't read yet...</code></pre>
       <h2>7. Reconciliation</h2>
       <p>When the local <code>plans/</code> folder and external sources start to drift, ask:</p>
 <pre><code>sync plans — what's drifted, what should graduate, what's stale?</code></pre>
-      <p>The <a href="skills/planning.html"><code>planning</code></a> skill's reconciliation mode compares local <code>plans/</code> against Jira/Confluence and groups the findings by graduation candidates, drift, and stale items. Each acted-on item is its own confirmation; a single "apply everything" is too coarse for hygiene work that spans multiple sources.</p>
+      <p>The <a href="skills/plans.html"><code>plans</code></a> skill's reconciliation mode compares local <code>plans/</code> against Jira/Confluence and groups the findings by graduation candidates, drift, and stale items. Each acted-on item is its own confirmation; a single "apply everything" is too coarse for hygiene work that spans multiple sources.</p>
     </section>
   </article>
 </main>

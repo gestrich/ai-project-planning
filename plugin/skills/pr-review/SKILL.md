@@ -38,9 +38,9 @@ The skill runs in three phases: **fetch → cross-reference → propose**. Every
 
 For each meaningful change in the diff, look up what the project's documentation says about that area. The documentation sources are whichever ones `AGENTS.md` declares for this project — usually some mix of:
 
-- **Confluence pages** — follow `planning/confluence.md` to read them (load Atlassian MCP schemas via `ToolSearch`, fetch with `contentFormat: "markdown"`). Don't redefine those patterns here.
+- **Confluence pages** — follow `plans/confluence.md` to read them (load Atlassian MCP schemas via `ToolSearch`, fetch with `contentFormat: "markdown"`). Don't redefine those patterns here.
 - **Local docs** — files inside the project, typically under `docs/` or `plans/`. Read directly.
-- **Plan files** — `plans/plan.md` and the domain documents it references, per `planning/local.md`.
+- **Plan files** — `plans/plan.md` and the domain documents it references, per `plans/local.md`.
 
 The goal of the cross-reference isn't to mechanically grep for filenames mentioned in the docs. It's to ask, for each load-bearing change in the diff: *is there documented guidance that speaks to this, and does the change match it?* Use judgment about what's load-bearing. A renamed local variable doesn't need a docs lookup; a new public API, a changed architectural boundary, a new dependency, a different error-handling pattern, a deviation from a naming convention — those do.
 
@@ -74,7 +74,7 @@ The output shape here intentionally mirrors `docs-update`'s proposal format so t
 ### 3a. Act (only after explicit confirmation)
 
 - **PR comments**: when the user picks one or more PR-side findings to post as comments, draft each comment and show it inline first. Wait for explicit go-ahead before posting (`gh pr review --comment` or `gh pr comment`). Re-check the PR head SHA before posting — if it's moved, surface that and re-fetch rather than commenting on a stale diff.
-- **Doc edits**: when the user picks one or more docs-side findings to act on, follow the same write discipline as `docs-update`. For Confluence, follow `planning/confluence.md`'s read-before-write protocol strictly (read live HTML, capture version, write back with the version for optimistic concurrency). For in-repo docs, show the proposed diff and wait for confirmation before writing.
+- **Doc edits**: when the user picks one or more docs-side findings to act on, follow the same write discipline as `docs-update`. For Confluence, follow `plans/confluence.md`'s read-before-write protocol strictly (read live HTML, capture version, write back with the version for optimistic concurrency). For in-repo docs, show the proposed diff and wait for confirmation before writing.
 - The proposal list is not the confirmation. Treat each action as a separate explicit ask.
 
 ## Mapping the project's `AGENTS.md` declarations onto this skill
@@ -93,10 +93,10 @@ If a required piece is missing, ask the user once and offer to run `bootstrap` (
 - **It does not run tests, linters, or builds.** The PR's own CI handles that. This skill is specifically about documented-conventions alignment.
 - **It does not post PR comments or edit docs without explicit confirmation.** Read-before-write applies to both directions.
 - **It does not generate generic code review feedback** (style nits, micro-optimizations, subjective preferences). Findings must trace back to something the project's docs actually say, or to a docs-shaped gap the PR exposes.
-- **It does not modify local `notes/` or `plans/`.** Those are owned by the `planning` skill.
+- **It does not modify local `notes/` or `plans/`.** Those are owned by the `plans` skill.
 
 ## Relationship to other skills
 
-- The Confluence and local-docs read patterns come from `planning/confluence.md` and `planning/local.md`. If those patterns need to change, change them once in the reference docs — don't duplicate here.
+- The Confluence and local-docs read patterns come from `plans/confluence.md` and `plans/local.md`. If those patterns need to change, change them once in the reference docs — don't duplicate here.
 - The docs-side output shape intentionally mirrors `docs-update`. The two skills can run side-by-side in a weekly cadence: open PRs reviewed, recent Slack swept, doc gaps proposed once from both sides.
 - `bootstrap` is the right answer when `AGENTS.md` is missing the repo or docs declaration this skill needs.

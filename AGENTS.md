@@ -6,7 +6,7 @@ This repository is the source for the **project-planning** plugin — a Claude/C
 
 ## Repository conventions
 
-- **`plugin/skills/`** — single source of truth for all skill content the plugin ships. Every published skill lives under `plugin/skills/<skill-name>/SKILL.md`, with reference documents in the same directory (e.g., `plugin/skills/planning/confluence.md`). Do not write skill content anywhere else; do not duplicate skill content between `plugin/skills/` and `.claude/skills/`.
+- **`plugin/skills/`** — single source of truth for all skill content the plugin ships. Every published skill lives under `plugin/skills/<skill-name>/SKILL.md`, with reference documents in the same directory (e.g., `plugin/skills/plans/confluence.md`). Do not write skill content anywhere else; do not duplicate skill content between `plugin/skills/` and `.claude/skills/`.
 - **`plugin/.claude-plugin/plugin.json`** — Claude Code manifest.
 - **`plugin/.codex-plugin/plugin.json`** — Codex manifest (`"skills": "./skills/"`).
 - **`.claude-plugin/marketplace.json`** — top-level marketplace metadata used by Claude Code's `plugin marketplace add` flow.
@@ -18,7 +18,7 @@ This repository is the source for the **project-planning** plugin — a Claude/C
 
 ## Shipped skills
 
-- **`planning`** — one skill, four modes (capture / status / sprint / reconciliation). Reference documents in `plugin/skills/planning/`: `notes.md`, `sprint.md`, `jira.md`, `confluence.md`, `slack.md`, `local.md`.
+- **`plans`** — one skill, four modes (capture / status / sprint / reconciliation). Reference documents in `plugin/skills/plans/`: `notes.md`, `sprint.md`, `jira.md`, `confluence.md`, `slack.md`, `local.md`.
 - **`bootstrap`** — onboards an existing project (folders, file moves, `AGENTS.md` content). Single SKILL.md.
 - **`docs-update`** — sweeps a configured Slack channel and proposes documentation updates.
 - **`pr-review`** — reviews a GitHub PR against the project's documented conventions; outputs PR-side and docs-side findings.
@@ -28,7 +28,7 @@ This repository is the source for the **project-planning** plugin — a Claude/C
 - Use the `skill-creator` skill for frontmatter conventions, description tuning, and the progressive-disclosure structure (SKILL.md + per-variant reference docs).
 - Descriptions should be "pushy": name explicit user trigger phrases *and* the implicit shape that should fire the skill. The skill description is the primary triggering mechanism.
 - Channel IDs, page IDs, project keys, `cloudId`s, repo URLs, and Slack workspace URLs come from the consuming project's `AGENTS.md` — never hardcode them in a skill body.
-- Defer external-source read/write mechanics to the matching reference document in `plugin/skills/planning/<source>.md` rather than redefining them in each skill that needs them.
+- Defer external-source read/write mechanics to the matching reference document in `plugin/skills/plans/<source>.md` rather than redefining them in each skill that needs them.
 - Read-by-default. Any external write — Confluence edit, Jira transition, Slack send, PR comment, local file write — requires explicit user confirmation. (This is the contract; don't restate it as a feature in user-facing docs.)
 
 ## Worked example: planning content in a consuming project's `AGENTS.md`
@@ -47,7 +47,7 @@ A project that uses this plugin declares its setup in `AGENTS.md`. There's no re
 - `acme-org/example-web` — web client
 
 **Plugin skills enabled:**
-- `planning` — capture brain dumps, show what's in motion, plan the week, reconcile drift.
+- `plans` — capture brain dumps, show what's in motion, plan the week, reconcile drift.
 - `pr-review` — review PRs against the documented conventions.
 ```
 

@@ -5,7 +5,7 @@ description: Onboard an existing project to the project-planning plugin's conven
 
 # bootstrap
 
-The on-ramp for the project-planning plugin. Bootstrap looks at an existing project, figures out what's already there, and proposes the minimum set of changes needed to get it into a shape the rest of the plugin's skills (`planning`, `docs-update`, `pr-review`) can work with. It never edits silently — every change goes through an explicit plan-of-changes the user signs off on first.
+The on-ramp for the project-planning plugin. Bootstrap looks at an existing project, figures out what's already there, and proposes the minimum set of changes needed to get it into a shape the rest of the plugin's skills (`plans`, `docs-update`, `pr-review`) can work with. It never edits silently — every change goes through an explicit plan-of-changes the user signs off on first.
 
 ## When to trigger
 
@@ -29,7 +29,7 @@ Read the project's current state. This is read-only.
 
 - **Determine the project root.** Usually the current working directory; if ambiguous, ask.
 - **Check for `AGENTS.md`** at the root. If it exists, read it and look for any existing planning-relevant content (declared planning sources, skill enablement list, etc.) under whatever heading or shape the user has it in. (`CLAUDE.md` may be a symlink to `AGENTS.md` — follow it.)
-- **Check for existing planning folders**: `notes/`, `plans/`, `plans/sprints/`. Note what's there and what's missing.
+- **Check for existing planning folders**: `notes/`, `plans/`, `sprints/`. Note what's there and what's missing.
 - **Check for stray planning artifacts** that should probably move into the convention — e.g., a top-level `NOTES.md`, a `TODO.md`, a `planning/` directory, dated transcript files at the root.
 - **Best-effort source-of-truth detection** (never assert — these are hints to ask the user about):
   - **Jira**: grep recent commit messages and PR descriptions for issue keys (e.g., `ABC-123`); check `README.md` and any `CONTRIBUTING.md` for Jira links; look for Jira URLs in `.github/` templates.
@@ -46,7 +46,7 @@ Produce a written plan-of-changes. Show it inline. Do not write anything yet.
 
 The plan must cover, in order:
 
-1. **Folders to create** — typically some subset of `notes/`, `plans/`, `plans/sprints/`. Skip ones that already exist.
+1. **Folders to create** — typically some subset of `notes/`, `plans/`, `sprints/`. Skip ones that already exist.
 2. **Existing files to move** — any stray planning artifacts found during survey, with proposed destinations. Always propose `git mv` (preserve history) rather than copy-delete.
 3. **`AGENTS.md` changes** — either:
    - Add planning content to an existing `AGENTS.md` (pick a heading and location that fits how the user already structured it; don't force a particular section name), or
@@ -92,7 +92,7 @@ This project uses the [project-planning plugin](https://github.com/gestrich/ai-p
 
 ### Plugin skills used
 
-- `planning` — capture transcripts into `notes/`, show what's in motion across Jira/Confluence/`plans/`, plan the week, and reconcile local plans against external sources. Use when I paste a brain-dump, ask "what's the plan", ask "what should I do this week", or ask what's drifted.
+- `plans` — capture transcripts into `notes/`, show what's in motion across Jira/Confluence/`plans/`, plan the week, and reconcile local plans against external sources. Use when I paste a brain-dump, ask "what's the plan", ask "what should I do this week", or ask what's drifted.
 - `bootstrap` — re-run if the planning shape changes (new Slack channel, new repo, etc.).
 - `docs-update` — sweep last week of `#team-channel` for things that should land in Confluence. Use weekly.
 - `pr-review` — review PRs against the docs declared above. Use when reviewing open PRs.
@@ -100,7 +100,7 @@ This project uses the [project-planning plugin](https://github.com/gestrich/ai-p
 
 Two things matter most about this content:
 
-- **It enumerates which planning sources apply**, so `planning` knows which reference documents to load.
+- **It enumerates which planning sources apply**, so `plans` knows which reference documents to load.
 - **It lists the plugin skills the project uses, each with a one-line "what it's for / when to reach for it"** in this project's context. This gives any future session immediate orientation without needing to read each SKILL.md upfront, and lets skills check the list before firing on ambiguous triggers.
 
 Omit subsections that don't apply (e.g., no Confluence → drop that bullet). Don't pad with skills the project isn't actually using.
@@ -108,11 +108,11 @@ Omit subsections that don't apply (e.g., no Confluence → drop that bullet). Do
 ## What this skill does *not* do
 
 - It does not write to external systems. No Jira project creation, no Confluence page creation, no Slack channel setup. It only writes to the local repo.
-- It does not run other skills as part of bootstrap. After applying the plan, the user invokes `planning`, `docs-update`, etc. themselves.
-- It does not enforce a folder layout beyond the conventions named in the plugin (`notes/`, `plans/`, `plans/sprints/`). If a project already uses a different layout and wants to keep it, propose declaring that in `AGENTS.md` instead of moving files.
+- It does not run other skills as part of bootstrap. After applying the plan, the user invokes `plans`, `docs-update`, etc. themselves.
+- It does not enforce a folder layout beyond the conventions named in the plugin (`notes/`, `plans/`, `sprints/`). If a project already uses a different layout and wants to keep it, propose declaring that in `AGENTS.md` instead of moving files.
 - It does not silently edit. Every change goes through the proposed plan and explicit confirmation.
 
 ## Relationship to other skills
 
-- `bootstrap` is run once per project (and re-run as a refresh when the planning shape changes). The other skills (`planning`, `docs-update`, `pr-review`) are used continuously and rely on the planning content in `AGENTS.md` that `bootstrap` lands.
-- If `planning` is invoked in a project with no planning content in `AGENTS.md`, it should suggest running `bootstrap` rather than guessing the planning shape from the repo contents.
+- `bootstrap` is run once per project (and re-run as a refresh when the planning shape changes). The other skills (`plans`, `docs-update`, `pr-review`) are used continuously and rely on the planning content in `AGENTS.md` that `bootstrap` lands.
+- If `plans` is invoked in a project with no planning content in `AGENTS.md`, it should suggest running `bootstrap` rather than guessing the planning shape from the repo contents.

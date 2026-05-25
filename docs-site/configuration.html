@@ -64,7 +64,7 @@ This project uses the [project-planning plugin](https://github.com/gestrich/ai-p
 
 ### Plugin skills enabled
 
-- `planning` — capture brain dumps, show what's in motion, plan the week, reconcile drift. Use when I paste a transcript, ask "what's the plan", "what should I do this week", or "what's drifted".
+- `plans` — capture brain dumps, show what's in motion, plan the week, reconcile drift. Use when I paste a transcript, ask "what's the plan", "what should I do this week", or "what's drifted".
 - `bootstrap` — re-run if the planning shape changes.
 - `docs-update` — sweep last week of the Slack channel for things that should land in Confluence. Use weekly.
 - `pr-review` — review PRs against the docs declared above. Use when I paste a PR URL.
@@ -78,7 +78,7 @@ The web client mirrors the backend's REST contract; PR reviews should check both
     <section>
       <h2>What each subsection feeds</h2>
       <h3>Sources of truth</h3>
-      <p>Tells the <a href="skills/planning.html"><code>planning</code></a> skill which reference documents to load. A Jira project key triggers <code>planning/jira.md</code>; a Confluence space and root page id trigger <code>planning/confluence.md</code>; a Slack channel id (marked for context) triggers <code>planning/slack.md</code>; a mention of <code>plans/</code> as a source triggers <code>planning/local.md</code>.</p>
+      <p>Tells the <a href="skills/plans.html"><code>plans</code></a> skill which reference documents to load. A Jira project key triggers <code>plans/jira.md</code>; a Confluence space and root page id trigger <code>plans/confluence.md</code>; a Slack channel id (marked for context) triggers <code>plans/slack.md</code>; a mention of <code>plans/</code> as a source triggers <code>plans/local.md</code>.</p>
       <p>Mark which source is authoritative for shipped work. When both <code>plans/</code> and an external system are listed, the plugin treats the external system as the source of truth and <code>plans/</code> as supplementary unless told otherwise.</p>
 
       <h3>GitHub repos</h3>

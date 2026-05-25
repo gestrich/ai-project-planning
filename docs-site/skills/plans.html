@@ -22,7 +22,7 @@
 <main>
   <article>
     <span class="tag">Skill</span>
-    <h1><code>planning</code></h1>
+    <h1><code>plans</code></h1>
     <p class="lede">The main entry point for managing your project. Capture brain dumps, ask what's in motion, plan the week, and reconcile your local plans against Jira/Confluence — all from one skill.</p>
 
     <section>
@@ -77,7 +77,7 @@
         <li><strong><code>notes/</code></strong> — raw inputs. Created on first capture; never edited after writing.</li>
         <li><strong><code>plans/</code></strong> — your local planning artifacts. Either the sole source of truth (if you're not using Jira/Confluence) or supplementary to them. Holds in-incubation ideas and personal items that don't belong in a team-visible system.</li>
         <li><strong><code>plans/plan.md</code></strong> — a short manifest that lists the other files in <code>plans/</code> so the skill can navigate without prescribing a structure.</li>
-        <li><strong><code>plans/sprints/</code></strong> — one file per sprint, dated by start-of-week.</li>
+        <li><strong><code>sprints/</code></strong> — one file per sprint, dated by start-of-week.</li>
       </ul>
       <p>Run <a href="bootstrap.html"><code>bootstrap</code></a> to create these folders in an existing project.</p>
     </section>
@@ -86,7 +86,7 @@
       <h2>What it writes (always with confirmation)</h2>
       <ul>
         <li><strong>A transcript file</strong> when you give it a brain dump (<code>notes/YYYY-MM-DD-&lt;slug&gt;.md</code>).</li>
-        <li><strong>A sprint file</strong> when you've approved the sprint draft (<code>plans/sprints/YYYY-MM-DD.md</code>).</li>
+        <li><strong>A sprint file</strong> when you've approved the sprint draft (<code>sprints/YYYY-MM-DD.md</code>).</li>
         <li><strong>External edits</strong> (a Jira transition, a Confluence page update, etc.) only when reconciliation surfaces a graduation candidate and you explicitly approve the specific change. Treat each acted-on item as its own confirmation.</li>
       </ul>
     </section>

@@ -29,7 +29,7 @@
       <dt>Reads</dt>
       <dd><code>AGENTS.md</code>, existing planning folders, commit history (for Jira/Confluence/Slack hints), <code>git remote -v</code>.</dd>
       <dt>Writes</dt>
-      <dd>Creates <code>notes/</code>, <code>plans/</code>, <code>plans/sprints/</code> as needed; uses <code>git mv</code> for any file relocations; edits or creates <code>AGENTS.md</code>; symlinks <code>CLAUDE.md → AGENTS.md</code>.</dd>
+      <dd>Creates <code>notes/</code>, <code>plans/</code>, <code>sprints/</code> as needed; uses <code>git mv</code> for any file relocations; edits or creates <code>AGENTS.md</code>; symlinks <code>CLAUDE.md → AGENTS.md</code>.</dd>
       <dt>Configuration</dt>
       <dd>None to start — this skill is what produces the configuration.</dd>
     </dl>
@@ -42,7 +42,7 @@
       <ul>
         <li>Determine the project root (usually <code>cwd</code>; asks if ambiguous).</li>
         <li>Check for <code>AGENTS.md</code> and any existing project-planning section (follows the <code>CLAUDE.md → AGENTS.md</code> symlink).</li>
-        <li>Check for existing <code>notes/</code>, <code>plans/</code>, <code>plans/sprints/</code> folders.</li>
+        <li>Check for existing <code>notes/</code>, <code>plans/</code>, <code>sprints/</code> folders.</li>
         <li>Check for stray planning artifacts — a top-level <code>NOTES.md</code>, <code>TODO.md</code>, <code>planning/</code> directory, dated transcript files at the root.</li>
         <li>Best-effort source-of-truth hints (never asserts — these become questions to ask): Jira issue keys in commit messages, Confluence URLs in docs, Slack archive links, GitHub remote(s).</li>
       </ul>
@@ -69,19 +69,12 @@
 
     <section>
       <h2>The planning content it produces in <code>AGENTS.md</code></h2>
-      <p>See the full shape in <a href="../configuration.html">Configuration</a>. Free-form markdown — the skill picks a heading that fits your existing <code>AGENTS.md</code>, doesn't force a particular section name. Two things matter most:</p>
+      <p>See the full shape in <a href="../configuration.html">Configuration</a>. Free-form markdown — the skill picks a heading that fits your existing <code>AGENTS.md</code>, doesn't force a particular section name. What lands in the content:</p>
       <ul>
-        <li><strong>It enumerates which planning sources apply</strong>, so <a href="planning.html"><code>planning</code></a> knows which reference documents to load.</li>
-        <li><strong>It lists the plugin skills the project uses</strong>, each with a one-line note on what it's for and when to reach for it. This gives any future session immediate orientation without needing to read each <code>SKILL.md</code> upfront.</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>What this skill does <em>not</em> do</h2>
-      <ul>
-        <li>It does not write to external systems. No Jira project creation, no Confluence page creation, no Slack channel setup — only writes to the local repo.</li>
-        <li>It does not run other skills as part of bootstrap. After applying the plan, you invoke <a href="planning.html"><code>planning</code></a>, <a href="docs-update.html"><code>docs-update</code></a>, etc. yourself.</li>
-        <li>It does not enforce a folder layout beyond the conventions named in the plugin. If a project already uses a different layout and wants to keep it, the skill proposes declaring that in <code>AGENTS.md</code> instead of moving files.</li>
+        <li><strong>Which planning sources apply</strong> — Jira project keys, Confluence space and root page IDs, the local <code>plans/</code> folder, and which is the source of truth for shipped work.</li>
+        <li><strong>The project's Slack channel</strong>, if any — name and ID, flagged for context — so the other skills know where to read team discussion.</li>
+        <li><strong>The project's GitHub repos</strong>, in <code>owner/repo</code> form.</li>
+        <li><strong>The plugin skills the project uses</strong>, each with a one-line note on what it's for and when to reach for it. This gives any future session immediate orientation without needing to read each <code>SKILL.md</code> upfront.</li>
       </ul>
     </section>
   </article>

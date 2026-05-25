@@ -1,9 +1,9 @@
 ---
-name: planning
-description: Help the user manage their project's planning — capture raw transcripts and brain dumps, show what's in motion and what's next, plan the coming sprint, and reconcile local notes against external sources of truth. Fire on (capture) "here's my brain dump", "voice transcript", "dump this into notes", or any long unstructured first-person paste that reads like a spoken transcript; (status) "what's the plan", "what's next", "catch me up", "where are we on X", "what's the status"; (sprint) "what should I do next", "plan my sprint", "what's on deck this week", "what should I focus on"; (reconciliation) "sync plans", "what's drifted", "what should graduate", "is the local plan still aligned with Jira/Confluence". Trigger even when the user does not name the mode — the skill picks the right mode from the ask and reads the project's AGENTS.md to figure out which planning sources apply (Jira, Confluence, a local plans/ folder, Slack-as-context, or some combination).
+name: plans
+description: Help the user manage their project — capture raw transcripts and brain dumps, show what's in motion and what's next, plan the coming sprint, and reconcile local plans against external sources of truth. Fire on (capture) "here's my brain dump", "voice transcript", "dump this into notes", or any long unstructured first-person paste that reads like a spoken transcript; (status) "what's the plan", "what's next", "catch me up", "where are we on X", "what's the status"; (sprint) "what should I do next", "plan my sprint", "what's on deck this week", "what should I focus on"; (reconciliation) "sync plans", "what's drifted", "what should graduate", "is the local plan still aligned with Jira/Confluence". Trigger even when the user does not name the mode — the skill picks the right mode from the ask and reads the project's AGENTS.md to figure out which planning sources apply (Jira, Confluence, a local plans/ folder, Slack-as-context, or some combination).
 ---
 
-# planning
+# plans
 
 One skill, four modes — all driven by what the user just asked for. The skill reads the project's `AGENTS.md` to discover which planning sources the project uses, then loads only the reference documents that match. No mode is assumed; the user's ask picks it.
 
@@ -38,7 +38,7 @@ The plugin uses these terms consistently across modes and reference documents:
 - **Notes** — raw transcripts in `notes/`, captured by this skill in capture mode. Inputs, not plans.
 - **Plans** — supplemental local planning artifacts in `plans/`. Either *the* source of truth (when no external system is configured) or *supplementary* to Jira/Confluence (when one is). `AGENTS.md` declares which.
 - **Domain documents** — files inside `plans/` organized by area of the project (UI, infra, testing, etc.), not by time.
-- **Sprints** — time-boxed actionable lists in `plans/sprints/`, owned by sprint mode.
+- **Sprints** — time-boxed actionable lists in `sprints/` (top-level, sibling of `plans/`), owned by sprint mode.
 - **Source of truth** — for projects that use Jira/Confluence, those are authoritative for shipped plans. `plans/` holds in-incubation ideas and personal items.
 
 ## Mode-picking heuristics
@@ -52,7 +52,7 @@ When in doubt, ask before writing.
 
 **Status mode** fires on asks for *current* state — "where are we", "what's the plan", "what's the status", "catch me up". The output is a synthesized view, source-cited, grouped by area not by source.
 
-**Sprint mode** fires on asks for *forward* state — "what should I do next", "plan the week", "what's on deck". The output is a draft sprint file at `plans/sprints/<YYYY-MM-DD>.md`, written only after the user has approved the draft. Sprint mode is a coach, not an automated planner — surface decisions, don't make them.
+**Sprint mode** fires on asks for *forward* state — "what should I do next", "plan the week", "what's on deck". The output is a draft sprint file at `sprints/<YYYY-MM-DD>.md`, written only after the user has approved the draft. Sprint mode is a coach, not an automated planner — surface decisions, don't make them.
 
 **Reconciliation mode** fires on asks for *drift* — "what's drifted", "what should graduate", "is the local plan aligned with Jira". The output is a hygiene report grouped by question (graduation candidates / drift / stale) — not by source. Reconciliation surfaces drift; it never silently resolves it.
 

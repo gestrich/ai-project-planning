@@ -1,6 +1,6 @@
 # Sprint mode
 
-Reference document for the `planning` skill when the user wants to plan the coming sprint. Sprint mode is a scrum-master coach — surface what's load-bearing, ask the questions that need answering, and only write the sprint file after the user has signed off on the draft.
+Reference document for the `plans` skill when the user wants to plan the coming sprint. Sprint mode is a scrum-master coach — surface what's load-bearing, ask the questions that need answering, and only write the sprint file after the user has signed off on the draft.
 
 ## When to invoke sprint mode
 
@@ -19,7 +19,7 @@ If the user is asking for a *current-state* synthesis ("what's the plan", "where
 2. **Gather context** in this order:
    - **Recent notes**: list and read recent files in `notes/`. Recency matters more than completeness — the last week or two is usually enough.
    - **Plan sources**: read whichever sources `AGENTS.md` declares (Jira, Confluence, local `plans/`, Slack-as-context). Use the corresponding reference documents ([jira.md](jira.md), [confluence.md](confluence.md), [slack.md](slack.md), [local.md](local.md)) — don't redefine the read mechanics here.
-   - **Previous sprint**: if `plans/sprints/` contains a previous file, read the most recent one. Note what carried over, what got dropped, and what was completed.
+   - **Previous sprint**: if `sprints/` contains a previous file, read the most recent one. Note what carried over, what got dropped, and what was completed.
    - **Slack activity (when configured)**: if `AGENTS.md` names a Slack channel for the project, pull the last week of activity from it read-only, using [slack.md](slack.md). This is for surfacing decisions, asks, and blockers — not for posting.
 3. **Coach, don't dictate.** Before drafting anything, surface the decisions the user is implicitly making by picking one sprint shape over another. Ask challenging questions when the load-bearing choice is unclear:
    - Which workstream is most at risk of slipping if it doesn't get attention this week?
@@ -28,7 +28,7 @@ If the user is asking for a *current-state* synthesis ("what's the plan", "where
    - What's awaiting a decision the user can make right now (and is therefore unblocking)?
    - What's *not* going in the sprint, and is the user okay with that?
    - Sprint mode surfaces these; the user answers them.
-4. **Draft the sprint file.** Show the draft inline before writing. Path: `plans/sprints/<YYYY-MM-DD>.md`, dated to the start of the sprint week. If `plans/sprints/` does not exist, create it.
+4. **Draft the sprint file.** Show the draft inline before writing. Path: `sprints/<YYYY-MM-DD>.md`, dated to the start of the sprint week. If `sprints/` does not exist, create it.
 5. **Confirm explicitly, then write.** Do not write the file until the user has approved the draft. Edits are cheap; surprise files are not.
 
 ## Sprint file shape (loose)

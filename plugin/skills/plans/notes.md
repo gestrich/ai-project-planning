@@ -1,6 +1,6 @@
 # Capture mode: notes
 
-Reference document for the `planning` skill when the user is dumping a raw transcript or brain dump. Take the input and write it, verbatim, into the current project's `notes/` folder.
+Reference document for the `plans` skill when the user is dumping a raw transcript or brain dump. Take the input and write it, verbatim, into the current project's `notes/` folder.
 
 Notes captured here are **raw artifacts**, not plans. Other modes (status, sprint, reconciliation) may read them later, but capture mode never edits a note after creating it and never rewrites the content on the way in.
 
