@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>docs-update — Project Planning</title>
-<meta name="description" content="The docs-update skill sweeps the configured Slack channel for the last week, cross-references the docs, and proposes documentation updates.">
+<meta name="description" content="The docs-update skill analyzes recent team discussion against your project's documentation and proposes updates you can act on.">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
@@ -23,71 +23,70 @@
   <article>
     <span class="tag">Skill</span>
     <h1><code>docs-update</code></h1>
-    <p class="lede">Closes the loop between team discussion (usually Slack) and canonical documentation (usually Confluence). Reads recent activity and proposes updates you can act on.</p>
-
-    <dl class="skill-meta">
-      <dt>Reads</dt>
-      <dd>The Slack channel declared in <code>AGENTS.md</code> (last week, read-only) and the documentation source declared in <code>AGENTS.md</code> (Confluence pages, an in-repo <code>docs/</code> folder, etc.).</dd>
-      <dt>Writes</dt>
-      <dd>When the project owns the docs: stages a Confluence edit (with read-before-write discipline) or an in-repo doc edit after explicit confirmation. When another team owns the docs: drafts a short message to that team — does not send it.</dd>
-      <dt>Configuration</dt>
-      <dd>Requires a Slack channel and a documentation source declared in <code>AGENTS.md</code>. Without those, the skill says so and stops.</dd>
-    </dl>
+    <p class="lede">Analyzes recent team discussion against the project's documentation and proposes updates you can act on. Reads where discussion happens and where the docs live from your <code>AGENTS.md</code>; follows whatever update workflow you've described there.</p>
 
     <section>
       <h2>What it does</h2>
-      <p>The skill runs in three phases: <strong>gather → propose → stage</strong>. Gather and propose are read-only; nothing leaves the project until you confirm.</p>
+      <ol>
+        <li>Reads the discussion source declared in <code>AGENTS.md</code> over a recent window (default: last seven days).</li>
+        <li>Reads the current documentation source declared in <code>AGENTS.md</code>.</li>
+        <li>Analyzes the two together and proposes updates — clarifications, missing answers, recurring questions that deserve a permanent home, decisions made in chat that the docs don't yet reflect.</li>
+        <li>Hands off the action however <code>AGENTS.md</code> says updates happen in this project. Always with your confirmation.</li>
+      </ol>
+      <p>Try: <em>"update the docs"</em>, <em>"what's missing from the docs?"</em>, <em>"review last week's discussion for doc updates"</em>, <em>"what should we have written down?"</em></p>
+    </section>
 
-      <h3>1. Gather</h3>
+    <section>
+      <h2>What it reads from <code>AGENTS.md</code></h2>
       <ul>
-        <li>Resolve the time window (default: last seven days; use <code>date +%Y-%m-%d</code> to anchor it). Honor a different window if you name one.</li>
-        <li>Read the Slack channel named in <code>AGENTS.md</code>, read-only — load Slack MCP schemas via <code>ToolSearch</code>, pull load-bearing threads, resolve user IDs to names, capture permalinks.</li>
-        <li>Read the documentation source declared in <code>AGENTS.md</code> — Confluence (with the read-before-write discipline), or in-repo docs. Don't skip this step; proposing updates without re-reading what the docs currently say is how you propose duplicates and contradictions.</li>
+        <li><strong>Where team discussion happens.</strong> Usually a Slack channel; could be Discord, GitHub Discussions, a mailing list, or anything else.</li>
+        <li><strong>Where the docs live.</strong> A Confluence space, an in-repo folder, a wiki, a Notion workspace, an S3 bucket — wherever the project keeps them.</li>
+        <li><strong>How docs get updated.</strong> Free-form prose. Projects do this in wildly different ways — direct edit access, a PR-reviewed in-repo folder, an issue against another team's repo, a request to a docs team. Whatever the workflow is, write it in <code>AGENTS.md</code> and the skill will follow it.</li>
       </ul>
+      <p>Without a named discussion source the skill has nothing to read. Without a named docs source it can still report what came out of discussion, but framed as "things the team is talking about that don't appear to be written down anywhere." Without a clear update workflow, the skill will ask before doing anything.</p>
+    </section>
 
-      <h3>2. Propose</h3>
-      <p>Produces a structured list of proposed updates. Each item carries:</p>
+    <section>
+      <h2>What the proposals look like</h2>
+      <p>Each proposed update carries:</p>
       <ul>
         <li><strong>What the update is</strong> — a clarification, a missing answer, a recurring question, a decision needing a permanent home.</li>
-        <li><strong>Where it should land</strong> — the specific doc/page/section. If ambiguous, surfaces as a question.</li>
-        <li><strong>Why it's worth landing</strong> — the Slack permalink that prompted it.</li>
-        <li><strong>Who owns the doc</strong> — the project (we can stage the write) or another team (we draft a message instead).</li>
+        <li><strong>Where it should land</strong> — the specific doc/page/section if known. If ambiguous, surfaced as a question.</li>
+        <li><strong>Why it's worth landing</strong> — the discussion signal that prompted it (link if available).</li>
       </ul>
-      <p>Good proposals usually fall into a few shapes:</p>
+      <p>Common patterns the skill flags:</p>
       <ul>
         <li>A question got asked more than once in different threads → the answer deserves a permanent home.</li>
-        <li>A decision was made in a thread but the doc still describes the prior approach → the doc needs an update.</li>
-        <li>A concept the team is using freely in chat doesn't appear in the docs at all → it needs to be introduced.</li>
+        <li>A decision was made but the doc still describes the prior approach → the doc needs an update.</li>
+        <li>A concept the team is using freely doesn't appear in the docs at all → it needs to be introduced.</li>
         <li>The doc is correct but ambiguous enough that people keep asking the same clarifying question → tighten the wording.</li>
       </ul>
       <p>One-off questions that got one-off answers don't count. The skill uses judgment about what's recurring vs. transient.</p>
+    </section>
 
-      <h3>3. Stage</h3>
-      <ul>
-        <li><strong>Project owns the doc.</strong> Offers to stage the edit. For Confluence, follows the read-before-write discipline: read live HTML, capture the version, compose the update as a delta, surface unexpected content, write back with the version for optimistic concurrency. For in-repo docs, shows the proposed diff inline and waits for confirmation.</li>
-        <li><strong>Another team owns the doc.</strong> Drafts a short message — what's changed, the Slack permalink, a concrete suggested edit. Hands it to you for the actual send. This skill does not post.</li>
-      </ul>
-      <p>The proposal list is not the confirmation. Each acted-on item is its own explicit ask.</p>
+    <section>
+      <h2>How the action happens</h2>
+      <p>The skill doesn't bake in an update workflow — your <code>AGENTS.md</code> describes one. Whatever it says, the skill follows. If you can edit the docs directly, it stages the edit using the right protocol for that source. If updates flow through another team or another process, it produces the artifact that workflow calls for (a message, an issue, a PR comment) and hands it to you to send.</p>
+      <p>Each acted-on proposal is its own explicit ask. The proposal list is not the confirmation.</p>
     </section>
 
     <section>
       <h2>When to reach for it</h2>
       <ul>
-        <li>"update the docs", "what should be in the docs", "what's missing from the docs"</li>
-        <li>"review last week's Slack for doc updates", "sweep Slack for doc updates"</li>
-        <li>"what should we have written down", "anything to land in Confluence from Slack"</li>
+        <li>"update the docs", "what's missing from the docs"</li>
+        <li>"review last week's discussion for doc updates"</li>
+        <li>"what should we have written down"</li>
         <li>A recurring weekly check on whether the documented state still matches reality.</li>
       </ul>
       <p>If you're asking a <em>one-shot</em> question that just happens to need docs context ("what does the spec say about X"), that's <a href="plans.html"><code>plans</code></a> in status mode. <code>docs-update</code> is the sweep — discussion in, doc proposals out.</p>
     </section>
 
     <section>
-      <h2>What this skill does <em>not</em> do</h2>
+      <h2>See also</h2>
       <ul>
-        <li>It does not post to Slack. Drafting a message to another team is fine; sending it is not this skill's job.</li>
-        <li>It does not write to documentation without explicit confirmation. Read-before-write applies to every body-content mutation.</li>
-        <li>It does not summarize the channel for catch-up purposes — that's <a href="plans.html"><code>plans</code></a> in status mode (with Slack as a context source).</li>
-        <li>It does not modify local <code>notes/</code> or <code>plans/</code>.</li>
+        <li><a href="bootstrap.html"><code>bootstrap</code></a> — set up the discussion source, docs source, and update workflow in <code>AGENTS.md</code>.</li>
+        <li><a href="plans.html"><code>plans</code></a> — capture, plan, and reconcile project state.</li>
+        <li><a href="pr-review.html"><code>pr-review</code></a> — also produces doc-update suggestions, looking from PRs rather than discussion.</li>
       </ul>
     </section>
   </article>
