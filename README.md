@@ -1,8 +1,14 @@
 # Project Planning
 
-A plugin for Claude Code and OpenAI Codex that helps you manage a project — capture brain dumps as notes, see what's in motion across Jira / Confluence / Slack / a local `plans/` folder, plan the week, reconcile local plans against external sources, and review PRs against the project's documented conventions.
+A plugin for Claude Code and OpenAI Codex that helps you manage a project — capture brain dumps, see what's in motion, plan the week, and review PRs against documented conventions.
 
-The skills read your `AGENTS.md` to discover which planning sources your project uses (Jira, Confluence, a local `plans/` folder, Slack-as-context, GitHub repos, or some combination). You write it in whatever shape makes sense for the project — there's no required heading and no enforced schema — and the skills parse it like a teammate would.
+## How it works
+
+Each project gets its own **local repo**. The repo represents your project: it's where your notes and local plans live, and it's the gateway the skills operate through. If you don't have one yet, the `bootstrap` skill creates and organizes it for you.
+
+From there, you chat about your project the way you would with a teammate — paste a brain dump, ask what's next, plan the week, hand over a PR for review. The skills know about your project's external sources of truth (Confluence pages, Jira issues, Slack channels, GitHub repos) and read from them on demand, so the local repo doesn't duplicate what already lives there. It holds what's *not* in those systems: in-incubation ideas, personal items, raw transcripts.
+
+Discovery of those sources is driven by your project's `AGENTS.md` — written in whatever shape makes sense. See [Configuration](#configuration) for the details.
 
 ## Installation
 
@@ -68,47 +74,9 @@ Skills trigger from natural-language prompts. You don't need to name the skill �
 
 ## Configuration
 
-The skills read your project's `AGENTS.md` and look for planning-relevant information in whatever shape you've written it. No required heading, no enforced schema — put the content under whatever heading fits your file. Skills look for these signals:
+The `bootstrap` skill sets up everything below the first time you run it; you usually don't write it by hand.
 
-- A Jira project key, epic ID, or board URL.
-- A Confluence space, page ID, or page URL.
-- A Slack channel name or ID flagged as project context.
-- A local `plans/` folder declared as a source.
-- A list of GitHub repos belonging to the project.
-- A list of which plugin skills the project uses, ideally with a one-line "what it's for / when to use it" per skill.
-
-An illustrative shape (use it as a starting point, not a template to follow exactly):
-
-```markdown
-## Project Planning
-
-**Planning sources:** Jira (project key `EXAMPLE`, epic `EXAMPLE-100`), Confluence (space `EX`, root page id `123456`), and the local `plans/` folder for in-incubation ideas. Source of truth for shipped work is Jira/Confluence; `plans/` is supplementary.
-
-**Slack channel:** `C0123456789` (canonical discussion channel).
-
-**GitHub repos:**
-- `acme-org/example-service` — primary backend
-- `acme-org/example-web` — web client
-
-**Plugin skills enabled:**
-- `planning` — capture brain dumps, show what's in motion, plan the week, reconcile drift. Use when I paste a transcript, ask "what's the plan", "what should I do this week", or "what's drifted".
-- `pr-review` — review PRs against the documented conventions. Use when I paste a PR URL.
-
-**Project-specific notes:** The web client mirrors the backend's REST contract; PR reviews should check both sides when an endpoint changes.
-```
-
-Folder layout lives in the project, not the plugin:
-
-```
-your-project/
-├── AGENTS.md            # planning content lives somewhere in here
-├── notes/               # raw transcripts (created by capture mode)
-└── plans/               # local planning artifacts
-    ├── plan.md          # manifest pointing at the other plan files
-    └── sprints/         # one file per sprint, dated by start-of-week
-```
-
-Run the `bootstrap` skill in an existing project to get this scaffolding set up.
+Each project's `AGENTS.md` carries the planning content — which Jira project, Confluence space, Slack channel, and GitHub repos belong to it. Free-form markdown, no enforced schema; the skills read it like a teammate would. See the [Configuration page on the site](https://gestrich.github.io/ai-project-planning/configuration.html) for the full reference and an example shape.
 
 ## Troubleshooting
 

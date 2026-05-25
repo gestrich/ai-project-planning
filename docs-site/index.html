@@ -22,11 +22,13 @@
 <main>
   <article>
     <h1>Project Planning</h1>
-    <p class="lede">A plugin for Claude Code and OpenAI Codex that helps you manage a project — capture brain dumps as notes, see what's in motion across Jira / Confluence / Slack / a local <code>plans/</code> folder, plan the week, reconcile local plans against external sources, and review PRs against your project's documented conventions.</p>
+    <p class="lede">A plugin for Claude Code and OpenAI Codex that helps you manage a project — capture brain dumps, see what's in motion, plan the week, and review PRs against documented conventions.</p>
 
     <section>
       <h2>How it works</h2>
-      <p>The skills read your project's <code>AGENTS.md</code> to discover which planning sources you use. You write that content in whatever shape makes sense for the project — there's no required heading and no enforced schema — and the skills parse it like a teammate would, picking up Jira project keys, Confluence pages, Slack channels, GitHub repos, and a local <code>plans/</code> folder as they appear.</p>
+      <p>Each project gets its own <strong>local repo</strong>. The repo represents your project: it's where your notes and local plans live, and it's the gateway the skills operate through. If you don't have one yet, the <a href="skills/bootstrap.html"><code>bootstrap</code></a> skill creates and organizes it for you.</p>
+      <p>From there, you chat about your project the way you would with a teammate — paste a brain dump, ask what's next, plan the week, hand over a PR for review. The skills know about the external sources of truth your project already uses (Confluence pages, Jira issues, Slack channels, GitHub repos) and read from them on demand, so the local repo doesn't duplicate what already lives there. It holds what's <em>not</em> in those systems: in-incubation ideas, personal items, raw transcripts.</p>
+      <p>Source discovery is driven by the project's <code>AGENTS.md</code>, written in whatever shape makes sense. See <a href="configuration.html">Configuration</a> for the details.</p>
     </section>
 
     <section>
