@@ -19,6 +19,17 @@ When available, the `mcp__claude_ai_Slack__*` family is the right way to read Sl
 - `slack_read_user_profile` — turn a user ID back into a name when summarizing.
 - `slack_read_canvas` — read a channel's Canvas (the pinned doc), when the project has one and the user asks about it.
 
+## Read the replies, not just the parents
+
+Parent messages frame a question; **the answers, decisions, and follow-ups live in the thread replies**. A channel-level read returns parents only — their text alone is misleading, because it shows the ask without the resolution.
+
+Rules:
+
+- Any parent with `reply_count > 0` that's topically relevant to the user's question — pull it with `slack_read_thread` before reporting on it. Don't skip threads to save tokens; missing the reply means missing the decision.
+- When a parent message *is the user's own question to the team* (asking design, asking eng, asking for opinions), the replies are the *entire point*. Reading the parent and reporting "no reply visible" without calling `slack_read_thread` is wrong — `slack_read_channel` does not return thread replies inline.
+- When using `slack_search_public`, the `context_after` field shows a few surrounding messages but is not a substitute for a full thread read. If reply count is non-trivial or the question is about the *outcome* of a discussion, fetch the thread.
+- Before claiming "the team hasn't responded" or "no decision yet," confirm by reading the thread. If `reply_count` is 0, say so explicitly; if it's >0 and you haven't read the replies, you don't know.
+
 ## Reading patterns
 
 What the user is asking for shapes the read. A few common shapes:
@@ -26,7 +37,7 @@ What the user is asking for shapes the read. A few common shapes:
 ### "Catch me up" / "What's happening in the channel?"
 
 1. `slack_read_channel(channel_id=<from AGENTS.md>, limit=20)`.
-2. Scan parents for non-trivial reply counts or reactions — those are the load-bearing threads. Pull each interesting one with `slack_read_thread`.
+2. Scan parents for non-trivial reply counts or reactions — those are the load-bearing threads. Pull each interesting one with `slack_read_thread`. Per the rule above, don't summarize a parent with replies without reading them first.
 3. Summarize **by topic**, not by timestamp. Surface:
    - Asks aimed at the user (questions, decisions waiting on them) — these go at the top.
    - Decisions made or direction shifts.
